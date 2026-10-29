@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医学三基速查手册 · 值班速查</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#070d18;
+    --bg-2:#0a1322;
+    --panel:#0e1829;
+    --panel-2:#111e33;
+    --line:#1c2b46;
+    --line-soft:rgba(120,160,220,.12);
+    --text:#e6eefb;
+    --text-dim:#8ea3bf;
+    --text-faint:#607690;
+    --accent:#3b82f6;
+    --accent-2:#38bdf8;
+    --accent-soft:rgba(59,130,246,.14);
+    --star:#f5b942;
+    --radius:14px;
+    --font:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:"SF Mono","JetBrains Mono",Consolas,"Courier New",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(900px 520px at 12% -10%, rgba(37,99,235,.20), transparent 60%),
+      radial-gradient(700px 460px at 100% 0%, rgba(14,165,233,.12), transparent 55%),
+      radial-gradient(700px 600px at 60% 120%, rgba(29,78,216,.10), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ============ 布局 ============ */
+  .app{
+    position:relative;z-index:1;
+    display:flex;
+    height:100vh;
+    height:100dvh;
+  }
+
+  /* ============ 侧边栏 ============ */
+  .sidebar{
+    width:250px;
+    flex:0 0 250px;
+    display:flex;
+    flex-direction:column;
+    background:linear-gradient(180deg, rgba(13,23,40,.96), rgba(9,17,30,.96));
+    border-right:1px solid var(--line);
+    backdrop-filter:blur(12px);
+  }
+  .brand{
+    padding:22px 20px 18px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .brand-mark{
+    width:38px;height:38px;
+    flex:0 0 38px;
+    border-radius:11px;
+    display:grid;place-items:center;
+    background:linear-gradient(145deg,#2563eb,#0ea5e9);
+    box-shadow:0 6px 18px -6px rgba(37,99,235,.75), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .brand-mark svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.9}
+  .brand-text b{
+    display:block;
+    font-size:15px;
+    letter-spacing:.4px;
+    font-weight:700;
+  }
+  .brand-text span{
+    display:block;
+    font-size:11px;
+    color:var(--text-faint);
+    letter-spacing:1.6px;
+    margin-top:3px;
+  }
+  .nav{
+    flex:1;
+    overflow-y:auto;
+    padding:14px 12px 8px;
+  }
+  .nav-label{
+    font-size:10.5px;
+    letter-spacing:1.8px;
+    color:var(--text-faint);
+    padding:8px 10px 9px;
+    font-weight:600;
+  }
+  .nav-item{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 11px;
+    margin-bottom:3px;
+    border:1px solid transparent;
+    border-radius:10px;
+    background:none;
+    color:var(--text-dim);
+    font-family:inherit;
+    font-size:13.5px;
+    cursor:pointer;
+    text-align:left;
+    transition:.18s;
+    position:relative;
+  }
+  .nav-item:hover{background:rgba(120,160,220,.07);color:var(--text)}
+  .nav-item.active{
+    background:var(--accent-soft);
+    border-color:rgba(59,130,246,.34);
+    color:#dceaff;
+  }
+  .nav-item.active::before{
+    content:"";
+    position:absolute;left:-12px;top:50%;
+    transform:translateY(-50%);
+    width:3px;height:18px;
+    border-radius:0 3px 3px 0;
+    background:linear-gradient(180deg,#60a5fa,#0ea5e9);
+    box-shadow:0 0 10px rgba(59,130,246,.8);
+  }
+  .nav-item .ico{
+    width:17px;height:17px;flex:0 0 17px;
+    stroke:currentColor;fill:none;stroke-width:1.7;
+    opacity:.9;
+  }
+  .nav-item .num{
+    margin-left:auto;
+    font-size:11px;
+    font-family:var(--mono);
+    color:var(--text-faint);
+    background:rgba(120,160,220,.09);
+    padding:1px 7px;
+    border-radius:20px;
+    min-width:24px;
+    text-align:center;
+  }
+  .nav-item.active .num{color:#9dc4ff;background:rgba(59,130,246,.22)}
+  .nav-sep{height:1px;background:var(--line-soft);margin:10px 10px}
+  .side-foot{
+    padding:14px 18px 16px;
+    border-top:1px solid var(--line-soft);
+    font-size:10.5px;
+    line-height:1.7;
+    color:var(--text-faint);
+  }
+  .side-foot b{color:#7f97b5;font-weight:600}
+  .kbd{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    border-radius:4px;
+    padding:0 4px;
+    color:#9fb4cd;
+  }
+
+  /* ============ 主区域 ============ */
+  .main{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+  .topbar{
+    flex:0 0 auto;
+    padding:20px 30px 16px;
+    border-bottom:1px solid var(--line-soft);
+    background:linear-gradient(180deg, rgba(8,14,26,.92), rgba(8,14,26,.55));
+    backdrop-filter:blur(10px);
+  }
+  .search-row{display:flex;align-items:center;gap:16px}
+  .search-box{
+    position:relative;
+    flex:1;
+    max-width:660px;
+  }
+  .search-box > svg{
+    position:absolute;left:15px;top:50%;transform:translateY(-50%);
+    width:17px;height:17px;
+    stroke:var(--text-faint);fill:none;stroke-width:2;
+    transition:.2s;
+  }
+  .search-box:focus-within > svg{stroke:var(--accent-2)}
+  #search{
+    width:100%;
+    height:46px;
+    padding:0 84px 0 42px;
+    background:rgba(15,26,44,.9);
+    border:1px solid var(--line);
+    border-radius:12px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+    transition:.2s;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  #search::placeholder{color:#54698a}
+  #search:focus{
+    border-color:rgba(59,130,246,.6);
+    background:rgba(16,29,50,.95);
+    box-shadow:0 0 0 3px rgba(59,130,246,.14), 0 8px 24px -12px rgba(37,99,235,.9);
+  }
+  .search-hint{
+    position:absolute;right:12px;top:50%;
+    transform:translateY(-50%);
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;color:var(--text-faint);
+    pointer-events:none;
+  }
+  .clear-btn{
+    position:absolute;right:10px;top:50%;
+    transform:translateY(-50%);
+    width:24px;height:24px;
+    display:none;place-items:center;
+    border:none;border-radius:50%;
+    background:rgba(255,255,255,.09);
+    color:#cbd9ec;cursor:pointer;
+    font-size:13px;line-height:1;
+  }
+  .clear-btn:hover{background:rgba(255,255,255,.16)}
+  .search-box.has-value .search-hint{display:none}
+  .search-box.has-value .clear-btn{display:grid}
+  .top-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--text-faint);
+    white-space:nowrap;
+  }
+  .top-meta .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px #22c55e;
+  }
+  .top-title{
+    padding:16px 30px 0;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .top-title h1{font-size:19px;font-weight:700;letter-spacing:.3px}
+  .top-title p{font-size:12px;color:var(--text-faint)}
+
+  /* ============ 内容滚动区 ============ */
+  .scroll{
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    padding:16px 30px 24px;
+    scrollbar-width:thin;
+    scrollbar-color:#22344f transparent;
+  }
+  .scroll::-webkit-scrollbar{width:9px}
+  .scroll::-webkit-scrollbar-thumb{
+    background:#1d2e47;border-radius:10px;border:2px solid var(--bg);
+  }
+  .scroll::-webkit-scrollbar-thumb:hover{background:#2b4161}
+
+  .result-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin:2px 0 14px;
+    font-size:12px;
+    color:var(--text-faint);
+  }
+  .result-bar strong{color:#9dc4ff;font-weight:600;font-family:var(--mono)}
+  .section-head{
+    display:flex;align-items:center;gap:10px;
+    margin:4px 0 14px;
+  }
+  .section-head .bar{
+    width:4px;height:16px;border-radius:3px;
+    background:linear-gradient(180deg,#60a5fa,#0ea5e9);
+    box-shadow:0 0 10px rgba(59,130,246,.6);
+  }
+  .section-head h2{font-size:14px;font-weight:600;color:#cfe0f7;letter-spacing:.3px}
+  .section-head .count{font-size:11px;color:var(--text-faint);font-family:var(--mono)}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+    gap:14px;
+    align-items:start;
+  }
+
+  /* ============ 卡片 ============ */
+  .card{
+    position:relative;
+    background:linear-gradient(170deg, rgba(18,31,52,.92), rgba(12,21,37,.94));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:15px 16px 12px;
+    transition:transform .22s, border-color .22s, box-shadow .22s;
+    animation:cardIn .32s ease both;
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .card::after{
+    content:"";
+    position:absolute;left:16px;right:16px;top:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(120,170,255,.28),transparent);
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(59,130,246,.42);
+    box-shadow:0 14px 30px -18px rgba(0,10,30,.9), 0 0 0 1px rgba(59,130,246,.08);
+  }
+  .card-top{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:9px;
+  }
+  .chip{
+    font-size:10.5px;
+    letter-spacing:.6px;
+    color:#8fb6f0;
+    background:rgba(59,130,246,.10);
+    border:1px solid rgba(59,130,246,.22);
+    padding:2px 8px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .star{
+    width:28px;height:28px;
+    display:grid;place-items:center;
+    border:none;border-radius:8px;
+    background:transparent;
+    cursor:pointer;
+    transition:.18s;
+    flex:0 0 28px;
+  }
+  .star svg{
+    width:17px;height:17px;
+    fill:none;
+    stroke:#5b7392;
+    stroke-width:1.7;
+    transition:.18s;
+  }
+  .star:hover{background:rgba(245,185,66,.1)}
+  .star:hover svg{stroke:var(--star);transform:scale(1.1)}
+  .star.on svg{
+    fill:var(--star);stroke:var(--star);
+    filter:drop-shadow(0 0 6px rgba(245,185,66,.55));
+  }
+  .card h3{
+    font-size:15px;
+    font-weight:650;
+    line-height:1.45;
+    letter-spacing:.2px;
+    color:#eaf2ff;
+  }
+  .card .sub{
+    font-size:11.5px;
+    color:var(--text-faint);
+    margin-top:3px;
+    line-height:1.5;
+  }
+  .card ul{
+    list-style:none;
+    margin-top:8px;
+  }
+  .card li{
+    display:grid;
+    grid-template-columns:max-content 1fr;
+    gap:10px;
+    padding:7.5px 0;
+    font-size:12.8px;
+    line-height:1.62;
+    align-items:baseline;
+  }
+  .card li + li{border-top:1px dashed rgba(120,160,220,.11)}
+  .card li .k{
+    color:#7d93b0;
+    font-size:11.5px;
+    white-space:nowrap;
+    padding-top:.5px;
+    min-width:56px;
+  }
+  .card li .v{color:#dbe7f8}
+  .card li .v b{color:#8fd0ff;font-weight:600}
+  mark{
+    background:rgba(56,189,248,.24);
+    color:#b9ecff;
+    border-radius:3px;
+    padding:0 2px;
+  }
+  .chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .chip.custom{
+    color:#6ee7b7;
+    background:rgba(16,185,129,.10);
+    border-color:rgba(16,185,129,.28);
+  }
+  .card-tools{display:flex;align-items:center;gap:3px}
+  .icon-btn{
+    width:27px;height:27px;
+    display:grid;place-items:center;
+    border:none;border-radius:7px;
+    background:transparent;
+    color:#68809f;
+    cursor:pointer;
+    transition:.16s;
+  }
+  .icon-btn svg{
+    width:14px;height:14px;
+    fill:none;stroke:currentColor;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .icon-btn:hover{background:rgba(120,160,220,.12);color:#cfe0f7}
+  .icon-btn.del:hover{background:rgba(239,68,68,.14);color:#fca5a5}
+  .card li.no-k{grid-template-columns:1fr}
+  .card li.no-k .k{display:none}
+  .card.flash{
+    border-color:rgba(56,189,248,.8);
+    box-shadow:0 0 0 1px rgba(56,189,248,.35), 0 0 30px -10px rgba(56,189,248,.75);
+  }
+  .nav-item.add{color:#9dc4ff;margin-top:2px}
+  .nav-item.add .ico{stroke:#60a5fa}
+  .nav-item.add:hover{background:rgba(59,130,246,.12);color:#dbeafe}
+
+  /* ============ 卡片行内编辑 ============ */
+  .card.editing{
+    border-color:rgba(59,130,246,.55);
+    box-shadow:0 0 0 1px rgba(59,130,246,.16), 0 18px 40px -24px #000;
+    transform:none;
+  }
+  .card.editing:hover{transform:none;border-color:rgba(59,130,246,.55)}
+  .edit-rows{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+  .edit-row{
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    padding:6px;
+    background:rgba(8,14,26,.6);
+    border:1px solid rgba(120,160,220,.14);
+    border-radius:9px;
+  }
+  .e-k,.e-v{
+    background:rgba(6,11,21,.92);
+    border:1px solid rgba(120,160,220,.16);
+    border-radius:6px;
+    padding:5px 7px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:12.3px;
+    line-height:1.55;
+    outline:none;
+    transition:.16s;
+  }
+  .e-k{width:96px;flex:0 0 96px}
+  .e-v{flex:1;min-width:0;min-height:32px;resize:none;overflow:hidden}
+  .e-title{
+    width:100%;
+    margin:4px 0 8px;
+    padding:7px 10px;
+    background:rgba(6,11,21,.92);
+    border:1px solid rgba(120,160,220,.18);
+    border-radius:7px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:600;
+    outline:none;
+    transition:.16s;
+  }
+  .e-title:focus{
+    border-color:rgba(59,130,246,.62);
+    background:rgba(10,18,32,.98);
+    box-shadow:0 0 0 2px rgba(59,130,246,.12);
+  }
+  .e-k:focus,.e-v:focus{
+    border-color:rgba(59,130,246,.62);
+    background:rgba(10,18,32,.98);
+    box-shadow:0 0 0 2px rgba(59,130,246,.12);
+  }
+  .e-k::placeholder,.e-v::placeholder{color:#4a5f7e}
+  .row-del{
+    width:26px;height:26px;
+    flex:0 0 26px;
+    display:grid;place-items:center;
+    margin-top:2px;
+    border:none;border-radius:6px;
+    background:transparent;
+    color:#68809f;
+    cursor:pointer;
+    transition:.16s;
+  }
+  .row-del svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+  .row-del:hover{background:rgba(239,68,68,.14);color:#fca5a5}
+  .add-row{
+    width:100%;
+    margin-top:8px;
+    padding:7px 10px;
+    border:1px dashed rgba(120,160,220,.3);
+    border-radius:8px;
+    background:rgba(59,130,246,.05);
+    color:#8fb6f0;
+    font-family:inherit;
+    font-size:12px;
+    cursor:pointer;
+    transition:.16s;
+  }
+  .add-row:hover{background:rgba(59,130,246,.13);border-color:rgba(59,130,246,.5);color:#c7e0ff}
+  .edit-foot{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    margin-top:12px;
+    padding-top:11px;
+    border-top:1px solid var(--line-soft);
+  }
+  .edit-foot .btn{height:31px;padding:0 13px;font-size:12px}
+  .edit-foot .foot-right{display:flex;gap:8px;margin-left:auto}
+  .btn-restore{
+    background:transparent;
+    border:1px solid transparent;
+    color:#8ea3bf;
+    font-size:11.5px;
+    padding:0 6px !important;
+  }
+  .btn-restore:hover{color:#fbbf24;background:rgba(245,158,11,.08)}
+  .edit-hint{
+    font-size:10.5px;
+    color:var(--text-faint);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  /* ============ 空状态 ============ */
+  .empty{
+    margin:60px auto;
+    max-width:380px;
+    text-align:center;
+    color:var(--text-faint);
+    animation:cardIn .3s ease both;
+  }
+  .empty-ico{
+    width:62px;height:62px;
+    margin:0 auto 16px;
+    display:grid;place-items:center;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:rgba(18,31,52,.7);
+  }
+  .empty-ico svg{width:26px;height:26px;stroke:#4f6a8c;fill:none;stroke-width:1.5}
+  .empty h3{font-size:14.5px;color:#b6c8e1;font-weight:600;margin-bottom:6px}
+  .empty p{font-size:12.5px;line-height:1.7}
+  .empty em{color:#8fd0ff;font-style:normal}
+
+  /* ============ 底部提示 ============ */
+  .disclaimer{
+    flex:0 0 auto;
+    padding:10px 30px 11px;
+    text-align:center;
+    font-size:11px;
+    letter-spacing:.2px;
+    color:#5b708c;
+    background:rgba(8,14,26,.9);
+    border-top:1px solid var(--line-soft);
+  }
+  .disclaimer span{color:#7d93b0}
+
+  /* ============ 提示条 ============ */
+  .toast{
+    position:fixed;
+    left:50%;bottom:54px;
+    transform:translate(-50%,14px);
+    padding:8px 16px;
+    font-size:12.5px;
+    border-radius:20px;
+    background:rgba(22,38,62,.96);
+    border:1px solid rgba(59,130,246,.4);
+    color:#d8e8ff;
+    box-shadow:0 12px 30px -12px #000;
+    opacity:0;
+    pointer-events:none;
+    transition:.26s;
+    z-index:50;
+    display:flex;align-items:center;gap:7px;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ============ 编辑弹窗 ============ */
+  .mask{
+    position:fixed;inset:0;
+    z-index:80;
+    display:none;
+    place-items:center;
+    padding:20px;
+    background:rgba(3,8,17,.74);
+    backdrop-filter:blur(4px);
+  }
+  .mask.open{display:grid}
+  .modal{
+    width:100%;
+    max-width:540px;
+    max-height:88vh;
+    display:flex;
+    flex-direction:column;
+    background:linear-gradient(170deg,#13203a,#0c1524);
+    border:1px solid #25395c;
+    border-radius:16px;
+    box-shadow:0 34px 80px -24px #000, inset 0 1px 0 rgba(255,255,255,.05);
+    animation:modalIn .22s ease both;
+    overflow:hidden;
+  }
+  @keyframes modalIn{
+    from{opacity:0;transform:translateY(14px) scale(.985)}
+    to{opacity:1;transform:none}
+  }
+  .modal-head{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:12px;
+    padding:18px 20px 14px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .modal-head h2{font-size:16px;font-weight:650;letter-spacing:.2px}
+  .modal-head p{font-size:11.5px;color:var(--text-faint);margin-top:4px;line-height:1.6}
+  .modal-close{
+    width:28px;height:28px;flex:0 0 28px;
+    display:grid;place-items:center;
+    border:none;border-radius:8px;
+    background:rgba(255,255,255,.05);
+    color:#93a8c4;font-size:14px;
+    cursor:pointer;transition:.16s;
+  }
+  .modal-close:hover{background:rgba(255,255,255,.12);color:#fff}
+  .modal-body{padding:16px 20px 2px;overflow-y:auto}
+  .field{margin-bottom:15px}
+  .field label{
+    display:flex;align-items:center;gap:5px;
+    font-size:12px;color:#a9bcda;
+    margin-bottom:7px;
+  }
+  .field label .req{color:#f87171}
+  .field input,.field select,.field textarea{
+    width:100%;
+    background:rgba(9,16,28,.92);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13.5px;
+    outline:none;
+    transition:.18s;
+  }
+  .field input::placeholder,.field textarea::placeholder{color:#4f6482}
+  .field textarea{min-height:160px;resize:vertical;line-height:1.75}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:rgba(59,130,246,.6);
+    box-shadow:0 0 0 3px rgba(59,130,246,.12);
+    background:rgba(13,23,40,.98);
+  }
+  .field .hint{font-size:11px;color:var(--text-faint);margin-top:7px;line-height:1.65}
+  .field .hint b{color:#8fb6f0;font-weight:500}
+  .field .err{display:none;font-size:11.5px;color:#fca5a5;margin-top:6px}
+  .field.invalid input,.field.invalid textarea{border-color:rgba(239,68,68,.65)}
+  .field.invalid .err{display:block}
+  .modal-foot{
+    display:flex;justify-content:flex-end;gap:10px;
+    padding:14px 20px 18px;
+  }
+  .btn{
+    height:36px;
+    padding:0 18px;
+    border:1px solid transparent;
+    border-radius:9px;
+    font-family:inherit;
+    font-size:13px;
+    cursor:pointer;
+    transition:.18s;
+  }
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--text-dim)}
+  .btn-ghost:hover{background:rgba(120,160,220,.09);color:var(--text)}
+  .btn-primary{
+    background:linear-gradient(180deg,#3b82f6,#2563eb);
+    color:#fff;font-weight:600;
+    box-shadow:0 10px 22px -12px #2563eb;
+  }
+  .btn-primary:hover{filter:brightness(1.09)}
+  .btn-primary:active{transform:translateY(1px)}
+
+  /* ============ 数据备份 ============ */
+  .modal.small{max-width:450px}
+  .backup-body{padding:16px 20px 2px}
+  .backup-desc{font-size:12px;color:var(--text-dim);line-height:1.75}
+  .backup-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    margin:15px 0 2px;
+  }
+  .backup-stat{
+    padding:11px 8px;
+    text-align:center;
+    border:1px solid var(--line-soft);
+    border-radius:9px;
+    background:rgba(9,16,28,.55);
+  }
+  .backup-stat b{
+    display:block;
+    font-size:16px;
+    font-weight:650;
+    color:#cfe0f7;
+    margin-bottom:3px;
+  }
+  .backup-stat span{font-size:10.5px;color:var(--text-faint)}
+  .backup-actions{display:flex;gap:10px;margin-top:16px}
+  .backup-actions .btn{
+    flex:1;
+    height:38px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .backup-actions svg{
+    width:14px;height:14px;
+    fill:none;stroke:currentColor;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .backup-actions .btn-primary svg{stroke:#dbeafe}
+  .backup-tip{font-size:10.5px;color:var(--text-faint);line-height:1.65;margin-top:11px}
+  .nav-item.backup{color:#a9bcda;margin-top:2px}
+
+  /* ============ 内嵌计算器 ============ */
+  .calc{margin-top:12px;padding-top:11px;border-top:1px solid var(--line-soft)}
+  .calc-toggle{
+    width:100%;height:34px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    border:1px solid rgba(59,130,246,.32);
+    border-radius:8px;
+    background:rgba(59,130,246,.09);
+    color:#9dc4ff;
+    font-family:inherit;font-size:12.5px;
+    cursor:pointer;transition:.16s;
+  }
+  .calc-toggle:hover{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.55);color:#dbeafe}
+  .calc-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .calc-toggle[hidden]{display:none}
+  .calc-panel{
+    margin-top:10px;padding:11px;
+    border:1px solid var(--line-soft);border-radius:10px;
+    background:rgba(8,14,26,.55);
+  }
+  .calc-panel[hidden]{display:none}
+  .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .calc-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .calc-field>span{font-size:10.8px;color:#93a8c4}
+  .calc-field input,.calc-field select{
+    width:100%;
+    background:rgba(6,11,21,.92);
+    border:1px solid rgba(120,160,220,.18);
+    border-radius:7px;
+    padding:7px 8px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:12.5px;
+    outline:none;
+    transition:.16s;
+  }
+  .calc-field input:focus,.calc-field select:focus{
+    border-color:rgba(59,130,246,.62);
+    box-shadow:0 0 0 2px rgba(59,130,246,.12);
+  }
+  .calc-field input::placeholder{color:#4a5f7e}
+  .calc-field.full{grid-column:1 / -1}
+  .calc-inline{display:flex;gap:6px}
+  .calc-inline input{flex:1;min-width:0}
+  .calc-inline select{width:86px;flex:0 0 86px}
+  .calc-error{display:none;margin-top:8px;font-size:11.3px;color:#fca5a5;line-height:1.5}
+  .calc-error.show{display:block}
+  .calc-actions{display:flex;gap:8px;margin-top:10px}
+  .calc-run{
+    flex:1;height:32px;
+    border:none;border-radius:8px;
+    background:linear-gradient(180deg,#3b82f6,#2563eb);
+    color:#fff;font-family:inherit;font-size:12.5px;font-weight:600;
+    cursor:pointer;transition:.16s;
+  }
+  .calc-run:hover{filter:brightness(1.08)}
+  .calc-hide{
+    height:32px;padding:0 12px;
+    border:1px solid var(--line);border-radius:8px;
+    background:transparent;color:var(--text-dim);
+    font-family:inherit;font-size:12px;cursor:pointer;transition:.16s;
+  }
+  .calc-hide:hover{background:rgba(120,160,220,.08);color:var(--text)}
+  .calc-result{
+    margin-top:10px;padding:10px 11px;
+    border-radius:9px;
+    background:rgba(16,185,129,.07);
+    border:1px solid rgba(16,185,129,.26);
+  }
+  .calc-result[hidden]{display:none}
+  .calc-value{font-size:22px;font-weight:650;color:#e8f3ff;line-height:1.2}
+  .calc-value small{font-size:10.8px;color:#8ea3bf;font-weight:400;margin-left:5px}
+  .calc-meta{
+    display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+    margin-top:7px;font-size:11.3px;color:#a9bcda;line-height:1.5;
+  }
+  .calc-chip{
+    flex:0 0 auto;
+    font-size:10.3px;padding:2px 7px;border-radius:999px;
+    border:1px solid rgba(59,130,246,.35);
+    background:rgba(59,130,246,.16);color:#9dc4ff;
+  }
+  .calc-chip.ok{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.14);color:#6ee7b7}
+  .calc-chip.warn{border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.14);color:#fbbf24}
+  .calc-row{font-size:12px;color:#cfe0f7;margin-top:6px}
+  .calc-row b{color:#fff;font-weight:600}
+
+  /* ============ 自定义标注（文字着色加粗，与正文强调一致） ============ */
+  mark.um{
+    padding:0;
+    background:transparent;
+    border-radius:2px;
+    cursor:pointer;
+    font-weight:600;
+    transition:color .15s;
+  }
+  mark.um:not(.um-plain):hover{filter:brightness(1.16)}
+  mark.um-yellow{color:#fcd34d}
+  mark.um-blue{color:#8fd0ff}
+  mark.um-green{color:#6ee7b7}
+  mark.um-pink{color:#f9a8d4}
+  mark.um-plain{color:inherit;font-weight:400}
+  .card li .v mark.um-plain{color:#dbe7f8}
+  /* 标注范围内的 <b> 跟随标注样式，不再保留原有蓝色加粗 */
+  .card li .v mark.um b,
+  .card li .k mark.um b{color:inherit;font-weight:inherit}
+  .mark-bar{
+    position:fixed;
+    z-index:130;
+    display:flex;align-items:center;gap:7px;
+    padding:7px 9px;
+    transform:translateX(-50%);
+    background:rgba(10,17,29,.97);
+    border:1px solid rgba(120,160,220,.24);
+    border-radius:10px;
+    box-shadow:0 10px 28px rgba(0,0,0,.5);
+  }
+  .mark-bar[hidden]{display:none}
+  .mark-bar-label{font-size:10.5px;color:#8ea3bf;letter-spacing:.04em}
+  .mark-dot{
+    width:16px;height:16px;padding:0;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.3);
+    cursor:pointer;
+    transition:transform .12s;
+  }
+  .mark-dot:hover{transform:scale(1.18)}
+  .mark-dot.yellow{background:#eab308}
+  .mark-dot.blue{background:#38bdf8}
+  .mark-dot.green{background:#34d399}
+  .mark-dot.pink{background:#f472b6}
+  .mark-plain{
+    padding:2px 6px;
+    border:1px solid rgba(120,160,220,.28);
+    border-radius:6px;
+    background:transparent;
+    color:#cfe0f7;
+    font-family:inherit;
+    font-size:11px;
+    cursor:pointer;
+    transition:.14s;
+  }
+  .mark-plain:hover{background:rgba(120,160,220,.12)}
+  .mark-sep{width:1px;height:14px;background:rgba(120,160,220,.2)}
+  .mark-clear{
+    border:none;background:transparent;padding:0 2px;
+    color:#8ea3bf;font-family:inherit;font-size:12px;cursor:pointer;
+  }
+  .mark-clear:hover{color:#fca5a5}
+  .toast svg{width:14px;height:14px;fill:var(--star);stroke:var(--star)}
+
+  /* ============ 响应式 ============ */
+  @media (max-width:900px){
+    body{overflow:auto}
+    .app{flex-direction:column;height:auto;min-height:100dvh}
+    .sidebar{
+      width:100%;flex:0 0 auto;
+      flex-direction:row;align-items:center;
+      border-right:none;border-bottom:1px solid var(--line);
+      overflow-x:auto;
+      padding:0 10px;
+    }
+    .brand{padding:12px 10px 12px 4px;border-bottom:none;flex:0 0 auto}
+    .brand-mark{width:32px;height:32px;flex-basis:32px;border-radius:9px}
+    .brand-text b{font-size:13px}
+    .brand-text span{display:none}
+    .nav{display:flex;align-items:center;gap:4px;padding:8px 0;overflow:visible}
+    .nav-label,.side-foot,.nav-sep,.nav-item .num{display:none}
+    .nav-item{
+      width:auto;white-space:nowrap;
+      padding:7px 12px;margin:0;font-size:12.5px;
+    }
+    .nav-item.active::before{display:none}
+    .nav-item .ico{width:15px;height:15px;flex-basis:15px}
+    .main{height:auto}
+    .topbar{padding:14px 16px 12px}
+    .search-row{gap:10px}
+    #search{height:42px;font-size:15px}
+    .top-title{padding:12px 16px 0}
+    .top-title h1{font-size:16px}
+    .scroll{padding:12px 16px 20px;overflow:visible}
+    .grid{grid-template-columns:1fr;gap:12px}
+    .disclaimer{padding:10px 16px;font-size:10.5px}
+    .mask{padding:12px}
+    .modal{max-height:92vh}
+    .modal-foot{padding:12px 16px 16px}
+  }
+  @media (max-width:520px){
+    .top-meta{display:none}
+    .search-box{max-width:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18M3 12h18"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <b>医学三基速查</b>
+        <span>QUICK REFERENCE</span>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <b>提示</b><br>
+      按 <span class="kbd">/</span> 快速聚焦搜索<br>
+      点星标收藏，自动本地保存<br>
+      自定义条目同样仅存本机
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="search-row">
+        <div class="search-box" id="searchBox">
+          <svg viewBox="0 0 24 24" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
+          </svg>
+          <input id="search" type="text" autocomplete="off" spellcheck="false"
+                 placeholder="搜索关键词：血钾 / 肾上腺素 / 补液 / 腹部触诊 …">
+          <div class="search-hint"><span class="kbd">/</span> 搜索</div>
+          <button class="clear-btn" id="clearBtn" aria-label="清空">✕</button>
+        </div>
+        <div class="top-meta"><span class="dot"></span>离线可用 · 本地收藏</div>
+      </div>
+    </header>
+
+    <div class="top-title">
+      <h1 id="viewTitle">常用检验正常值</h1>
+      <p id="viewDesc"></p>
+    </div>
+
+    <div class="scroll" id="scroll">
+      <div class="result-bar">
+        <div id="resultText"></div>
+        <div id="favSummary"></div>
+      </div>
+      <div id="content"></div>
+    </div>
+
+    <footer class="disclaimer">
+      本工具仅供学习参考，临床用药请遵医嘱和最新指南
+    </footer>
+  </main>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.9z"/></svg>
+  <span id="toastText">已收藏</span>
+</div>
+
+<!-- 划线标注工具条 -->
+<div class="mark-bar" id="markBar" hidden>
+  <span class="mark-bar-label">标注</span>
+  <button type="button" class="mark-dot yellow" data-color="yellow" title="黄色标注"></button>
+  <button type="button" class="mark-dot blue" data-color="blue" title="蓝色标注"></button>
+  <button type="button" class="mark-dot green" data-color="green" title="绿色标注"></button>
+  <button type="button" class="mark-dot pink" data-color="pink" title="粉色标注"></button>
+  <button type="button" class="mark-plain" data-color="plain" title="恢复正文样式（取消加粗与标注）">正文</button>
+  <span class="mark-sep"></span>
+  <button type="button" class="mark-clear" data-clear="1" title="取消该处标注">✕</button>
+</div>
+
+<!-- 添加 / 编辑自定义条目 -->
+<div class="mask" id="mask" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalTitle">添加自定义条目</h2>
+        <p>内容会保存在本机浏览器，可随时编辑或删除</p>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="关闭">✕</button>
+    </div>
+    <form id="entryForm" novalidate>
+      <div class="modal-body">
+        <div class="field" id="fieldTitle">
+          <label for="formTitle">标题 <span class="req">*</span></label>
+          <input id="formTitle" type="text" maxlength="60" placeholder="例如：值班常用降压药起始剂量">
+          <div class="err">请填写标题</div>
+        </div>
+        <div class="field">
+          <label for="formCat">分类</label>
+          <select id="formCat"></select>
+        </div>
+        <div class="field" id="fieldContent">
+          <label for="formContent">内容 <span class="req">*</span></label>
+          <textarea id="formContent" maxlength="4000"
+                    placeholder="每行一条，支持「标签：内容」格式&#10;例如：&#10;起始剂量：氨氯地平 5 mg qd&#10;合并糖尿病：目标血压 &lt;130/80 mmHg"></textarea>
+          <div class="hint">每行一条；写成 <b>标签：内容</b> 会自动分成两列，更接近内置条目的样式。</div>
+          <div class="err">请填写内容</div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="modalCancel">取消</button>
+        <button type="submit" class="btn btn-primary" id="modalSave">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 数据备份 -->
+<div class="mask" id="backupMask" aria-hidden="true">
+  <div class="modal small" role="dialog" aria-modal="true" aria-labelledby="backupTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="backupTitle">数据备份</h2>
+        <p>导出或导入本机的自定义数据</p>
+      </div>
+      <button class="modal-close" id="backupClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="backup-body">
+      <div class="backup-desc">导出的 JSON 文件包含收藏记录、自定义条目、卡片标题与内容的修改，以及文字标注。导入会用备份覆盖当前本机数据，请确认后再操作。</div>
+      <div class="backup-stats" id="backupStats"></div>
+      <div class="backup-actions">
+        <button class="btn btn-primary" id="backupExport">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg>
+          导出 JSON
+        </button>
+        <button class="btn btn-ghost" id="backupImport">
+          <svg viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 20h16"/></svg>
+          导入 JSON
+        </button>
+      </div>
+      <div class="backup-tip">数据仅保存在浏览器本地，不会上传；导入只接受本工具导出的备份文件。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="backupCloseBtn">关闭</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+
+<script>
+/* =========================================================
+   数据
+   ========================================================= */
+const DATA = [
+  {
+    id: "lab",
+    name: "常用检验正常值",
+    desc: "血常规 · 肝肾功能 · 电解质 · 凝血 · 血气",
+    icon: 'M9 3h6M10 3v6.2L5.6 17.4A2 2 0 0 0 7.3 20h9.4a2 2 0 0 0 1.7-2.6L14 9.2V3M8 15h8',
+    items: [
+      {
+        title: "血常规（成人）",
+        sub: "末梢血或静脉血，各实验室参考区间略有差异",
+        list: [
+          ["白细胞", "WBC (4.0–10.0) × 10⁹/L；中性粒细胞 50%–70%"],
+          ["红细胞", "男 (4.0–5.5)、女 (3.5–5.0) × 10¹²/L"],
+          ["血红蛋白", "男 120–160 g/L；女 110–150 g/L"],
+          ["血小板", "PLT (100–300) × 10⁹/L"],
+          ["网织红", "0.5%–1.5%；Hct 男 40%–50%、女 35%–45%"],
+          ["贫血", "Hb 男 &lt;120、女 &lt;110 g/L（孕妇 &lt;100）；分度 &gt;90 轻、60–90 中、30–59 重、&lt;30 极重"],
+          ["红细胞增多", "Hb 男 &gt;165、女 &gt;160 g/L；RBC 男 &gt;5.5、女 &gt;5.0 ×10¹²/L"],
+          ["血小板减少", "PLT &lt;100 ×10⁹/L；&lt;50 出血风险增加，&lt;20 自发出血风险高"]
+        ]
+      },
+      {
+        title: "肝功能",
+        sub: "空腹采血，ALT/AST 升高需结合病史判断",
+        list: [
+          ["ALT", "0–40 U/L（男可至 50）"],
+          ["AST", "0–40 U/L；AST/ALT &gt;2 警惕酒精性肝病"],
+          ["总胆红素", "TBIL 3.4–17.1 μmol/L"],
+          ["直接胆红素", "DBIL 0–6.8 μmol/L"],
+          ["白蛋白", "ALB 35–55 g/L；&lt;30 提示低蛋白血症"],
+          ["总蛋白", "TP 60–80 g/L"],
+          ["ALP / GGT", "ALP 40–150 U/L；GGT 男 10–60、女 7–45 U/L"]
+        ]
+      },
+      {
+        title: "肾功能",
+        sub: "肌酐受肌肉量影响，老年人可正常而肾功能已下降",
+        list: [
+          ["肌酐", "Cr 男 53–106、女 44–97 μmol/L"],
+          ["尿素氮", "BUN 2.9–8.2 mmol/L"],
+          ["尿酸", "UA 男 208–428、女 155–357 μmol/L"],
+          ["胱抑素 C", "0.6–1.2 mg/L，早期肾损伤较敏感"],
+          ["尿量", "成人 &gt;0.5 mL/kg/h；&lt;400 mL/d 为少尿，&lt;100 为无尿"]
+        ]
+      },
+      {
+        title: "电解质（含正常血钾范围）",
+        sub: "急查电解质是值班最常开的项目之一",
+        list: [
+          ["血钾 K⁺", "<b>3.5–5.5 mmol/L</b>；&lt;3.5 低钾，&gt;5.5 高钾"],
+          ["血钠 Na⁺", "135–145 mmol/L；&lt;135 低钠，&gt;145 高钠"],
+          ["血氯 Cl⁻", "96–106 mmol/L"],
+          ["总钙", "2.1–2.6 mmol/L（离子钙 1.1–1.3 mmol/L）"],
+          ["血镁", "0.8–1.2 mmol/L"],
+          ["血磷", "0.8–1.45 mmol/L"]
+        ]
+      },
+      {
+        title: "凝血功能",
+        sub: "抗凝治疗、术前、出血倾向患者的常规筛查",
+        list: [
+          ["PT", "11–14 s；超过正常对照 3 s 以上为异常"],
+          ["APTT", "25–37 s；延长 &gt;10 s 有临床意义"],
+          ["INR", "0.8–1.2；华法林抗凝目标多为 2.0–3.0"],
+          ["纤维蛋白原", "FIB 2.0–4.0 g/L"],
+          ["D-二聚体", "&lt;0.5 mg/L FEU；升高见于血栓、DIC、感染"],
+          ["TT", "14–21 s"]
+        ]
+      },
+      {
+        title: "动脉血气（未吸氧）",
+        sub: "判断氧合、通气与酸碱失衡的基础",
+        list: [
+          ["pH", "7.35–7.45；&lt;7.35 酸血症，&gt;7.45 碱血症"],
+          ["PaO₂", "80–100 mmHg"],
+          ["PaCO₂", "35–45 mmHg"],
+          ["HCO₃⁻", "22–27 mmol/L"],
+          ["BE", "−3 ~ +3 mmol/L"],
+          ["乳酸", "&lt;2 mmol/L；&gt;4 提示组织低灌注"],
+          ["SaO₂", "95%–98%"]
+        ]
+      },
+      {
+        title: "血糖与尿常规",
+        sub: "床旁血糖仪结果需与静脉血复核",
+        list: [
+          ["空腹血糖", "3.9–6.1 mmol/L"],
+          ["餐后 2h", "&lt;7.8 mmol/L"],
+          ["糖化血红蛋白", "HbA1c 4%–6%"],
+          ["尿比重", "1.003–1.030"],
+          ["尿蛋白 / 尿糖", "均为阴性"],
+          ["尿白细胞", "阴性或 0–5 个/HP"]
+        ]
+      }
+    ]
+  },
+  {
+    id: "emergency",
+    name: "急救流程",
+    desc: "CPR · 过敏性休克 · 急性心梗 · 恶性心律失常",
+    icon: 'M3 12h4l2-5 3 10 2-5h7',
+    items: [
+      {
+        title: "成人心肺复苏（BLS）流程",
+        sub: "心跳骤停：识别—呼救—按压—除颤",
+        list: [
+          ["1 判断", "轻拍双肩、大声呼唤，同时观察呼吸，&lt;10 秒"],
+          ["2 呼救", "启动应急反应系统，取 AED / 除颤仪"],
+          ["3 按压", "两乳头连线中点（胸骨下半部），深度 <b>5–6 cm</b>，频率 <b>100–120 次/分</b>，充分回弹"],
+          ["4 通气", "按压 : 通气 = <b>30 : 2</b>，每次约 1 秒，见胸廓抬起"],
+          ["5 除颤", "可电击心律立即除颤：双相 120–200 J，单相 360 J"],
+          ["6 用药", "肾上腺素 1 mg 静推 / 骨髓腔，每 3–5 分钟一次"],
+          ["7 轮换", "每 2 分钟轮换按压者，中断 &lt;10 秒"]
+        ]
+      },
+      {
+        title: "过敏性休克处理",
+        sub: "首选肾上腺素，肌注，越早越好",
+        list: [
+          ["立即", "停用可疑药物/过敏原，呼救，平卧抬高下肢（呼吸困难者半卧位）"],
+          ["肾上腺素", "<b>0.3–0.5 mg 肌注</b>（1:1000，大腿前外侧），5–15 分钟可重复"],
+          ["氧与通路", "高流量吸氧，开放静脉，快速输 0.9% NaCl 500–1000 mL"],
+          ["糖皮质激素", "地塞米松 5–10 mg 静注，或甲泼尼龙 40–80 mg"],
+          ["抗组胺", "苯海拉明 20 mg 肌注，或异丙嗪 25 mg 肌注"],
+          ["支气管痉挛", "沙丁胺醇雾化；喉头水肿准备气管插管 / 环甲膜穿刺"],
+          ["观察", "至少留观 6–8 小时，警惕双相反应"]
+        ]
+      },
+      {
+        title: "急性心肌梗死处理原则",
+        sub: "再灌注时间是核心，D2B / D2N 越短越好",
+        list: [
+          ["监护", "心电监护、吸氧（SpO₂ &lt;90%）、建立两条静脉通路"],
+          ["抗血小板", "阿司匹林 300 mg 嚼服 + 氯吡格雷 300–600 mg（或替格瑞洛 180 mg）"],
+          ["抗凝", "依诺肝素或普通肝素，按体重给药"],
+          ["再灌注", "发病 12 h 内首选急诊 PCI（D2B &lt;90 min）；无条件时溶栓（D2N &lt;30 min）"],
+          ["扩血管", "硝酸甘油舌下 / 静滴；下壁、右室梗死及低血压慎用"],
+          ["镇痛", "吗啡 3–5 mg 静注（谨慎，注意呼吸抑制）"],
+          ["他汀", "阿托伐他汀 40–80 mg，尽早启动"]
+        ]
+      },
+      {
+        title: "室颤 / 无脉性室速",
+        sub: "可电击心律：除颤优先，按压不要停",
+        list: [
+          ["除颤", "立即非同步除颤，双相 120–200 J，之后立即继续 CPR 2 分钟"],
+          ["肾上腺素", "1 mg 静推，每 3–5 分钟；可置于除颤后第 2 次循环"],
+          ["抗心律失常", "难治性室颤：胺碘酮 300 mg 静推，必要时 150 mg 重复"],
+          ["可逆病因", "5H5T：低氧、低血容量、酸中毒、低/高钾、低温；张力性气胸、心包填塞、中毒、肺栓塞、冠脉事件"],
+          ["复苏后", "目标温度管理、维持 MAP ≥65 mmHg、12 导联心电图"]
+        ]
+      },
+      {
+        title: "高钾血症紧急处理",
+        sub: "K⁺ &gt;6.0 或伴心电图改变需立即处理",
+        list: [
+          ["停钾", "停所有含钾药物与食物，立即心电监护"],
+          ["稳膜", "<b>10% 葡萄糖酸钙 10–20 mL</b> 缓慢静推，1–3 分钟起效"],
+          ["转钾", "胰岛素 10 U + 50% 葡萄糖 50 mL 静滴；沙丁胺醇 10–20 mg 雾化"],
+          ["纠正酸中毒", "碳酸氢钠静滴（合并代谢性酸中毒时）"],
+          ["排钾", "呋塞米 40 mg 静推；阳离子交换树脂；<b>血液透析</b>（K⁺ &gt;6.5 或难治）"],
+          ["复查", "处理后 1–2 小时复查血钾与心电图"]
+        ]
+      },
+      {
+        title: "低血糖处理",
+        sub: "血糖 &lt;3.9 mmol/L；昏迷者先补糖再找原因",
+        list: [
+          ["清醒", "口服 15–20 g 葡萄糖（约半杯果汁 / 3 块方糖），15 分钟后复测"],
+          ["昏迷", "<b>50% 葡萄糖 40–60 mL 静推</b>，继以 10% 葡萄糖静滴维持"],
+          ["无通路", "胰高血糖素 1 mg 肌注"],
+          ["查找病因", "胰岛素或磺脲类过量、饮酒、肝肾功能不全、肾上腺皮质功能减退"],
+          ["随访", "反复低血糖需持续监测，警惕脑水肿"]
+        ]
+      },
+      {
+        title: "急性左心衰 / 肺水肿",
+        sub: "端坐呼吸、粉红色泡沫痰：坐位、吸氧、利尿、扩血管",
+        list: [
+          ["体位", "坐位、双腿下垂，减少回心血量"],
+          ["氧疗", "高流量吸氧，必要时无创通气（CPAP / BiPAP）"],
+          ["利尿", "呋塞米 20–40 mg 静推"],
+          ["扩血管", "硝酸甘油静滴（收缩压 &gt;110 mmHg 时）"],
+          ["镇静", "吗啡 3–5 mg 静注（COPD、呼吸抑制者禁用）"],
+          ["强心", "西地兰 0.2–0.4 mg 缓慢静注（房颤伴快速心室率时）"]
+        ]
+      }
+    ]
+  },
+  {
+    id: "drug",
+    name: "常用药物",
+    desc: "皮试 · 肾上腺素 · 胰岛素 · 激素 · 硝酸甘油",
+    icon: 'M10.5 20.5a4.9 4.9 0 0 1-7-7l7-7a4.9 4.9 0 0 1 7 7zM6 12l6 6',
+    items: [
+      {
+        title: "青霉素皮试",
+        sub: "首次用药、停药 3 天以上、更换批号均需重做",
+        list: [
+          ["皮试液", "青霉素 500 U/mL（0.1 mL 含 50 U）"],
+          ["方法", "前臂掌侧下 1/3 皮内注射 0.1 mL，形成皮丘"],
+          ["观察", "注射后 <b>20 分钟</b> 看结果，期间不得离开"],
+          ["阴性", "皮丘无红肿、无伪足，直径未增大"],
+          ["阳性", "红晕 &gt;1 cm 或出现伪足、瘙痒 → 禁用并记录"],
+          ["抢救准备", "备肾上腺素 1 mg、地塞米松、氧气与输液通路"]
+        ]
+      },
+      {
+        title: "肾上腺素用法",
+        sub: "规格 1 mg / 1 mL（1:1000），不同场景剂量差异大",
+        list: [
+          ["过敏性休克", "<b>0.3–0.5 mg 肌注</b>（大腿前外侧），5–15 分钟可重复"],
+          ["心跳骤停", "1 mg 静推 / 骨髓腔，每 3–5 分钟"],
+          ["严重哮喘", "0.3–0.5 mg 肌注；雾化用 1:10000 稀释"],
+          ["静脉泵入", "0.05–0.5 μg/kg/min，按血压滴定"],
+          ["注意", "心律失常、冠心病、未控制的高血压慎用；勿与碱性液同管"]
+        ]
+      },
+      {
+        title: "胰岛素换算",
+        sub: "U-100 制剂：1 U = 0.01 mL，务必使用胰岛素专用注射器",
+        list: [
+          ["降糖幅度", "1 U 约降 2–4 mmol/L（个体差异大）"],
+          ["敏感系数 ISF", "1800 / 日总量（mg/dL）或 100 / 日总量（mmol/L）"],
+          ["碳水系数 ICR", "500 / 日总量 = 1 U 覆盖的碳水克数"],
+          ["GIK 配比", "50% 葡萄糖 50 mL + 胰岛素 10 U（约 4 g 糖 : 1 U）"],
+          ["起始剂量", "2 型糖尿病 0.3–0.5 U/kg/d，基础 + 餐时分配"],
+          ["单位换算", "1 mmol/L ≈ 18 mg/dL"]
+        ]
+      },
+      {
+        title: "糖皮质激素等效剂量",
+        sub: "换算原则：等效抗炎剂量，而非等重量",
+        list: [
+          ["等效剂量", "氢化可的松 20 mg = 泼尼松 5 mg = 甲泼尼龙 4 mg = 地塞米松 0.75 mg"],
+          ["抗炎强度", "氢化可的松 1 : 泼尼松 4 : 甲泼尼龙 5 : 地塞米松 25"],
+          ["盐皮质激素", "氢化可的松最强，地塞米松几乎为零"],
+          ["冲击治疗", "甲泼尼龙 500–1000 mg/d，连用 3–5 天"],
+          ["注意", "长期使用需补钙、护胃，不可骤停"]
+        ]
+      },
+      {
+        title: "硝酸甘油",
+        sub: "扩静脉为主，降低前负荷；低血压时禁用",
+        list: [
+          ["片剂", "0.5 mg 舌下含服，5 分钟可重复，最多 3 次"],
+          ["静滴", "5–10 μg/min 起始，每 5–10 分钟递增 5–10 μg/min"],
+          ["目标", "收缩压下降约 10%，且维持 SBP &gt;90 mmHg"],
+          ["禁忌", "SBP &lt;90、右室梗死、肥厚型梗阻性心肌病、48 h 内用过西地那非"],
+          ["副作用", "头痛、面部潮红、低血压、反射性心动过速"]
+        ]
+      },
+      {
+        title: "肝素与低分子肝素",
+        sub: "抗凝治疗需监测 APTT 与血小板",
+        list: [
+          ["普通肝素", "负荷 80 U/kg 静推，维持 18 U/kg/h"],
+          ["监测", "目标 APTT 为正常值的 1.5–2.5 倍"],
+          ["依诺肝素", "治疗 1 mg/kg q12h；预防 40 mg qd"],
+          ["HIT", "用药 5–10 天复查血小板，下降 &gt;50% 需停药"],
+          ["拮抗", "鱼精蛋白 1 mg 中和 100 U 普通肝素"]
+        ]
+      }
+    ]
+  },
+  {
+    id: "formula",
+    name: "临床计算公式",
+    desc: "eGFR · 补液 · 儿童剂量 · 体表面积",
+    icon: 'M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM9 7h6M9 11h2M13 11h2M9 15h2M13 15h2',
+    items: [
+      {
+        title: "肾小球滤过率 eGFR",
+        sub: "CKD-EPI 2021 公式（不含种族系数），Scr 单位 mg/dL",
+        list: [
+          ["公式", "eGFR = 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^(−1.200) × 0.9938^年龄 × 1.012（女）"],
+          ["κ 值", "女 0.7；男 0.9"],
+          ["α 值", "女 −0.241；男 −0.302"],
+          ["肌酐换算", "mg/dL × 88.4 = μmol/L"],
+          ["CKD 分期", "G1 ≥90｜G2 60–89｜G3a 45–59｜G3b 30–44｜G4 15–29｜G5 &lt;15"],
+          ["简化 MDRD", "175 × Scr^(−1.154) × 年龄^(−0.203) × 0.742（女）"]
+        ]
+      },
+      {
+        title: "肌酐清除率（Cockcroft-Gault）",
+        sub: "常用于药物剂量调整",
+        list: [
+          ["公式", "CrCl = (140 − 年龄) × 体重(kg) / [72 × Scr(mg/dL)]"],
+          ["女性", "结果再 × 0.85"],
+          ["肥胖患者", "用理想体重或调整体重计算更准确"],
+          ["意义", "CrCl &lt;30 时多数经肾排泄药物需减量"]
+        ]
+      },
+      {
+        title: "补液量计算",
+        sub: "先估算丢失量，再安排补液速度与张力",
+        list: [
+          ["生理需要", "成人 30–40 mL/kg/d（约 2000–2500 mL）"],
+          ["4-2-1 法则", "≤10 kg：4 mL/kg/h；11–20 kg：40 + 2 mL/kg/h；&gt;20 kg：60 + 1 mL/kg/h"],
+          ["脱水程度", "轻度约 5%、中度 5%–10%、重度 &gt;10% 体重"],
+          ["累积损失（儿童）", "轻度 30–50、中度 50–100、重度 100–120 mL/kg"],
+          ["烧伤 Parkland", "4 mL × 体重(kg) × 烧伤面积(%)，前 8 小时补一半"],
+          ["补钾", "浓度 ≤0.3%（约 40 mmol/L），速度 ≤20 mmol/h，见尿补钾"],
+          ["补钠", "需钠量(g) = (目标 Na − 实测 Na) × 体重 × 0.6（女 0.5）；24 h 血钠升高 &lt;10 mmol/L"]
+        ]
+      },
+      {
+        title: "儿童药物剂量（按体重 / 体表面积）",
+        sub: "儿童用药优先按体表面积或体重精确计算",
+        list: [
+          ["按体重", "剂量 = 体重(kg) × 每 kg 剂量；注意单次与每日总量"],
+          ["按体表面积", "儿童剂量 = 成人剂量 × 儿童 BSA / 1.73"],
+          ["BSA 公式", "BSA(m²) = √[身高(cm) × 体重(kg) / 3600]"],
+          ["体重估算", "1–6 岁：年龄 × 2 + 8；7–12 岁：(年龄 × 7 − 5) / 2"],
+          ["年龄折算", "1 月 1/8、6 月 1/6、1 岁 1/4、4 岁 1/3、8 岁 1/2、12 岁 2/3"],
+          ["注意", "新生儿、肝肾功能不全需个体化调整"]
+        ]
+      },
+      {
+        title: "平均动脉压（MAP）",
+        sub: "休克复苏的床旁快速换算",
+        list: [
+          ["公式", "MAP = (收缩压 + 2 × 舒张压) / 3"],
+          ["正常范围", "70–100 mmHg"],
+          ["休克目标", "MAP ≥65 mmHg，保证器官灌注"],
+          ["偏低处理", "评估容量状态、心功能与血管张力，必要时液体复苏或升压药"]
+        ]
+      },
+      {
+        title: "阴离子间隙（AG）",
+        sub: "代谢性酸中毒的病因分型",
+        list: [
+          ["公式", "AG = Na⁺ − (Cl⁻ + HCO₃⁻)"],
+          ["正常范围", "8–16 mmol/L（未校正）"],
+          ["白蛋白校正", "校正 AG = AG + 2.5 × (40 − 白蛋白 g/L) / 10"],
+          ["高 AG 代酸", "乳酸、酮症、尿毒症、甲醇/乙二醇/水杨酸中毒"],
+          ["正常 AG 代酸", "腹泻、肾小管酸中毒、大量生理盐水复苏"]
+        ]
+      },
+      {
+        title: "体表面积与常用单位换算",
+        sub: "化疗、液体治疗与营养计算常用",
+        list: [
+          ["BSA", "√[身高(cm) × 体重(kg) / 3600]，成人约 1.6–1.9 m²"],
+          ["理想体重", "身高(cm) − 105（男性）；女性 × 0.9"],
+          ["BMI", "体重(kg) / 身高(m)²，正常 18.5–23.9"],
+          ["血糖单位", "1 mmol/L = 18 mg/dL"],
+          ["压力单位", "1 cmH₂O ≈ 0.098 kPa；1 mmHg ≈ 0.133 kPa"]
+        ]
+      }
+    ]
+  },
+  {
+    id: "exam",
+    name: "体格检查要点",
+    desc: "腹部触诊 · 神经系统 · 心肺听诊",
+    icon: 'M4 12a8 8 0 0 1 16 0M6 12v4a3 3 0 0 0 3 3h1M18 12v4a3 3 0 0 1-3 3h-1M12 12v1a3 3 0 0 0 3 3.6',
+    items: [
+      {
+        title: "腹部触诊顺序",
+        sub: "先浅后深、由健侧到患侧，避免遗漏",
+        list: [
+          ["顺序", "左下腹起始 → 逆时针（左下→左上→右上→右下）"],
+          ["层次", "先浅触诊 1–2 cm，再深触诊 2–3 cm"],
+          ["原则", "由健侧到患侧、由浅入深、先查非痛处再查痛处"],
+          ["内容", "腹壁紧张度、压痛与反跳痛、包块、肝脾触诊"],
+          ["肝脏", "右锁骨中线自脐水平以下向上，随呼气触诊"],
+          ["脾脏", "左肋缘下，轻度肿大用双手触诊"],
+          ["特殊体征", "Murphy 征（胆囊）、液波震颤（腹水）、反跳痛（腹膜刺激征）"]
+        ]
+      },
+      {
+        title: "神经系统查体",
+        sub: "意识—脑神经—运动—感觉—反射，逐项记录",
+        list: [
+          ["意识", "GCS = 睁眼 4 + 语言 5 + 运动 6，满分 15 分"],
+          ["脑神经", "Ⅰ–Ⅻ 逐对检查，重点瞳孔对光反射、眼球运动、面舌"],
+          ["肌力", "<b>0</b> 无收缩｜1 有收缩｜2 床面移动｜3 抬离床面｜4 抗阻减弱｜5 正常"],
+          ["肌张力与共济", "指鼻试验、跟膝胫试验、Romberg 征"],
+          ["感觉", "浅感觉（痛温触）+ 深感觉（位置觉、振动觉）"],
+          ["反射", "肱二/三头、膝/跟腱反射；病理反射 Babinski"],
+          ["脑膜刺激征", "颈强直、Kernig 征、Brudzinski 征"]
+        ]
+      },
+      {
+        title: "心脏听诊",
+        sub: "按瓣膜区顺序，杂音需描述部位、时相、性质、强度与传导",
+        list: [
+          ["顺序", "二尖瓣区（心尖）→ 肺动脉瓣区 → 主动脉瓣区 → 主动脉瓣第二听诊区 → 三尖瓣区"],
+          ["内容", "心率、心律、心音（S1/S2、S3/S4）、杂音、心包摩擦音"],
+          ["强度分级", "Levine 1–6 级，4 级以上多伴震颤"],
+          ["心尖搏动", "正常位于左第 5 肋间锁骨中线内 0.5–1.0 cm"],
+          ["心率", "&lt;60 次/分 心动过缓；&gt;100 次/分 心动过速"],
+          ["常见杂音", "二尖瓣狭窄舒张期隆隆样；二尖瓣关闭不全收缩期吹风样"]
+        ]
+      },
+      {
+        title: "肺部查体",
+        sub: "视、触、叩、听四步，双侧对比",
+        list: [
+          ["视诊", "呼吸频率（正常 12–20 次/分）、节律、胸廓对称性、三凹征"],
+          ["触诊", "语颤增强见于实变，减弱见于气胸/积液；胸膜摩擦感"],
+          ["叩诊", "清音正常；浊音（实变、积液）；过清音（肺气肿）；鼓音（气胸）"],
+          ["听诊", "肺泡呼吸音、支气管呼吸音、湿啰音、干啰音、胸膜摩擦音"],
+          ["语音共振", "增强提示肺实变，减弱提示积液或气胸"]
+        ]
+      },
+      {
+        title: "浅表淋巴结检查",
+        sub: "按固定顺序滑动触诊，记录大小、质地、压痛与活动度",
+        list: [
+          ["顺序", "耳前 → 耳后 → 枕部 → 颌下 → 颏下 → 颈前 → 颈后 → 锁骨上"],
+          ["继续", "腋窝 → 滑车上 → 腹股沟 → 腘窝"],
+          ["手法", "示指、中指、环指并拢，指腹滑动触诊"],
+          ["记录", "数目、大小、质地、压痛、活动度、是否粘连"],
+          ["临床提示", "锁骨上（Virchow）淋巴结肿大需警惕消化道肿瘤"]
+        ]
+      },
+      {
+        title: "生命体征与一般检查",
+        sub: "每次查体先完成，必要时重复测量",
+        list: [
+          ["体温", "腋温 36.0–37.0 ℃；&gt;37.3 为发热"],
+          ["脉搏", "60–100 次/分，注意节律与强弱"],
+          ["呼吸", "12–20 次/分；&gt;24 为呼吸急促"],
+          ["血压", "正常 &lt;120/80 mmHg；≥140/90 为高血压"],
+          ["一般状况", "神志、体位、面容、皮肤黏膜、水肿、营养状态"]
+        ]
+      }
+    ]
+  }
+];
+
+/* =========================================================
+   状态与本地存储
+   ========================================================= */
+const STORAGE_KEY = "med3_quickref_favs_v1";
+const CUSTOM_KEY = "med3_quickref_custom_v1";
+const OVERRIDE_KEY = "med3_custom_v1";
+const MARKS_KEY = "med3_marks_v1";
+let favorites = loadFavorites();
+let customItems = loadCustom();
+let rowOverrides = loadRowOverrides();
+let marks = loadMarks();
+let activeCat = "lab";
+let query = "";
+let editingId = null;
+let editingKey = null;
+let editRows = [];
+let editTitle = "";
+
+function loadFavorites(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  }catch(e){
+    return new Set();
+  }
+}
+function saveFavorites(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...favorites]));
+  }catch(e){ /* 隐私模式等情况下静默失败 */ }
+}
+function loadCustom(){
+  try{
+    const raw = localStorage.getItem(CUSTOM_KEY);
+    if(!raw) return [];
+    const arr = JSON.parse(raw);
+    if(!Array.isArray(arr)) return [];
+    return arr.filter(it => it && it.id && it.title && it.content && it.catId);
+  }catch(e){
+    return [];
+  }
+}
+function saveCustom(){
+  try{
+    localStorage.setItem(CUSTOM_KEY, JSON.stringify(customItems));
+  }catch(e){ /* 存储不可用时静默失败 */ }
+}
+
+/* 卡片行级自定义（叠加层）：{ "lab:2": { rows: [[项目, 内容], ...], updatedAt } } */
+function loadRowOverrides(){
+  try{
+    const raw = localStorage.getItem(OVERRIDE_KEY);
+    if(!raw) return {};
+    return normalizeOverrides(JSON.parse(raw));
+  }catch(e){
+    return {};
+  }
+}
+function loadMarks(){
+  try{
+    const raw = localStorage.getItem(MARKS_KEY);
+    if(!raw) return {};
+    return normalizeMarks(JSON.parse(raw));
+  }catch(e){
+    return {};
+  }
+}
+
+function saveMarks(){
+  try{
+    localStorage.setItem(MARKS_KEY, JSON.stringify(marks));
+  }catch(e){ /* 隐私模式下静默失败 */ }
+}
+
+function normalizeMarks(obj){
+  const out = {};
+  const COLORS = ["yellow", "blue", "green", "pink", "plain"];
+  if(!obj || typeof obj !== "object" || Array.isArray(obj)) return out;
+  Object.keys(obj).forEach(key => {
+    const list = obj[key];
+    if(!Array.isArray(list)) return;
+    const records = [];
+    list.forEach(rec => {
+      if(!rec || typeof rec !== "object") return;
+      const start = Number(rec.start);
+      const end = Number(rec.end);
+      if(!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end <= start) return;
+      if(rec.field !== "k" && rec.field !== "v") return;
+      if(!Number.isInteger(rec.row) || rec.row < 0) return;
+      records.push({
+        id: (typeof rec.id === "string" && rec.id) ? rec.id : "m" + Math.random().toString(36).slice(2, 9),
+        field: rec.field,
+        row: rec.row,
+        start,
+        end,
+        color: COLORS.indexOf(rec.color) === -1 ? "yellow" : rec.color
+      });
+    });
+    if(records.length) out[key] = records;
+  });
+  return out;
+}
+
+/* 把标注范围落到文本节点上（支持跨 <b> 等内联节点） */
+function wrapRange(fieldEl, start, end, color, id){
+  const walker = document.createTreeWalker(fieldEl, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let pos = 0, node;
+  while((node = walker.nextNode())){
+    nodes.push({ node, from: pos, to: pos + node.nodeValue.length });
+    pos += node.nodeValue.length;
+  }
+  for(let i = nodes.length - 1; i >= 0; i--){
+    const item = nodes[i];
+    const s = Math.max(start, item.from) - item.from;
+    const e = Math.min(end, item.to) - item.from;
+    if(s >= e) continue;
+    let target = item.node;
+    if(e < target.nodeValue.length) target.splitText(e);
+    if(s > 0) target = target.splitText(s);
+    const m = document.createElement("mark");
+    m.className = "um um-" + color;
+    m.dataset.mark = id;
+    target.parentNode.insertBefore(m, target);
+    m.appendChild(target);
+  }
+}
+
+function applyMarks(container){
+  container.querySelectorAll(".card[data-key]").forEach(card => {
+    const list = marks[card.dataset.key];
+    if(!Array.isArray(list)) return;
+    list.forEach(rec => {
+      const li = card.querySelectorAll("li")[rec.row];
+      if(!li) return;
+      const fieldEl = li.querySelector(rec.field === "k" ? ".k" : ".v");
+      if(!fieldEl) return;
+      const len = fieldEl.textContent.length;
+      if(rec.start < 0 || rec.end > len || rec.start >= rec.end) return;
+      wrapRange(fieldEl, rec.start, rec.end, rec.color, rec.id);
+    });
+  });
+}
+function saveRowOverrides(){
+  try{
+    localStorage.setItem(OVERRIDE_KEY, JSON.stringify(rowOverrides));
+  }catch(e){ /* 存储不可用时静默失败 */ }
+}
+
+/* 把「标签：内容」的每一行解析为卡片列表项 */
+function parseContent(text){
+  return String(text)
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const m = line.match(/^([^：:]{1,14})[：:]\s*(.+)$/);
+      return m ? [m[1].trim(), m[2].trim()] : ["", line];
+    });
+}
+
+/* 每次数据变更后重建索引：内置条目 + 自定义条目 */
+const ENTRIES = [];
+const ENTRY_MAP = new Map();
+function buildEntries(){
+  ENTRIES.length = 0;
+  ENTRY_MAP.clear();
+
+  DATA.forEach(cat => {
+    cat.items.forEach((item, idx) => {
+      const key = cat.id + ":" + idx;
+      const entry = {
+        ...item,
+        key,
+        catId: cat.id,
+        catName: cat.name,
+        isCustom: false,
+        baseRows: item.list,
+        baseTitle: item.title,
+        overridden: false
+      };
+      // 叠加本机自定义：仅作用于内置卡片，不改动 DATA 本身
+      const ov = rowOverrides[key];
+      if(ov && Array.isArray(ov.rows)){
+        entry.list = ov.rows.map(r => [r[0], r[1]]);
+        if(ov.title) entry.title = ov.title;
+        entry.overridden = true;
+      }
+      entry.calcId = calcIdForEntry(entry);
+      ENTRIES.push(entry);
+      ENTRY_MAP.set(entry.key, entry);
+    });
+  });
+
+  customItems.forEach(item => {
+    const cat = DATA.find(c => c.id === item.catId);
+    if(!cat) return;
+    const list = parseContent(item.content);
+    const entry = {
+      title: item.title,
+      sub: "",
+      list,
+      baseRows: list,
+      baseTitle: item.title,
+      key: "custom:" + item.id,
+      catId: cat.id,
+      catName: cat.name,
+      isCustom: true,
+      overridden: false,
+      customId: item.id
+    };
+    ENTRIES.push(entry);
+    ENTRY_MAP.set(entry.key, entry);
+  });
+}
+
+/* =========================================================
+   工具函数
+   ========================================================= */
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+function escapeRegExp(str){
+  return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+}
+/* 先按 HTML 标签拆分，避免高亮落入标签内部 */
+function highlight(html, q){
+  if(!q) return html;
+  const parts = html.split(/(<[^>]+>)/g);
+  const re = new RegExp(escapeRegExp(q), "gi");
+  return parts.map(p => {
+    if(p.startsWith("<")) return p;
+    return p.replace(re, m => "<mark>" + m + "</mark>");
+  }).join("");
+}
+function searchText(entry){
+  return [
+    entry.title, entry.sub || "", entry.catName,
+    ...entry.list.map(([k,v]) => k + " " + v.replace(/<[^>]+>/g,""))
+  ].join(" ").toLowerCase();
+}
+
+/* =========================================================
+   渲染
+   ========================================================= */
+const navEl = document.getElementById("nav");
+const contentEl = document.getElementById("content");
+const viewTitle = document.getElementById("viewTitle");
+const viewDesc = document.getElementById("viewDesc");
+const resultText = document.getElementById("resultText");
+const favSummary = document.getElementById("favSummary");
+const searchInput = document.getElementById("search");
+const searchBox = document.getElementById("searchBox");
+const clearBtn = document.getElementById("clearBtn");
+const scrollEl = document.getElementById("scroll");
+const toastEl = document.getElementById("toast");
+const toastText = document.getElementById("toastText");
+
+const starSVG = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.9z"/></svg>';
+const editSVG = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+const trashSVG = '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>';
+
+function renderNav(){
+  const favCount = favorites.size;
+  let html = '<div class="nav-label">分 类 导 航</div>';
+  DATA.forEach(cat => {
+    const count = ENTRIES.filter(e => e.catId === cat.id).length;
+    html += `
+      <button class="nav-item ${activeCat === cat.id ? "active" : ""}" data-cat="${cat.id}">
+        <svg class="ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="${cat.icon}"/></svg>
+        <span>${cat.name}</span>
+        <span class="num">${count}</span>
+      </button>`;
+  });
+  html += '<div class="nav-sep"></div>';
+  html += `
+    <button class="nav-item ${activeCat === "fav" ? "active" : ""}" data-cat="fav">
+      <svg class="ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.9z"/></svg>
+      <span>我的收藏</span>
+      <span class="num">${favCount}</span>
+    </button>
+    <button class="nav-item backup" data-backup="1">
+      <svg class="ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10M8 9l4 4 4-4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+      <span>数据备份</span>
+    </button>
+    <button class="nav-item add" data-add="1">
+      <svg class="ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      <span>添加条目</span>
+    </button>`;
+  navEl.innerHTML = html;
+
+  navEl.querySelectorAll(".nav-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if(btn.dataset.backup){ openBackup(); return; }
+      if(btn.dataset.add){ openModal(null); return; }
+      activeCat = btn.dataset.cat;
+      editingKey = null;
+      editRows = [];
+      renderNav();
+      render();
+      scrollEl.scrollTop = 0;
+    });
+  });
+}
+
+function cardHTML(entry, q, showCat){
+  const fav = favorites.has(entry.key);
+  const isCustom = !!entry.isCustom;
+  const escapeRow = isCustom || entry.overridden;
+  const title = highlight(escapeHtml(entry.title), q);
+  const sub = entry.sub ? highlight(escapeHtml(entry.sub), q) : "";
+  const rows = entry.list.map(([k,v]) => {
+    const safeK = highlight(escapeHtml(k), q);
+    const safeV = highlight(escapeRow ? escapeHtml(v) : v, q);
+    return `
+      <li class="${k ? "" : "no-k"}">
+        <span class="k">${safeK}</span>
+        <span class="v">${safeV}</span>
+      </li>`;
+  }).join("");
+
+  const chips = `
+    <div class="chips">
+      ${showCat ? `<span class="chip">${escapeHtml(entry.catName)}</span>` : ""}
+      ${isCustom ? `<span class="chip custom">自定义</span>` : ""}
+    </div>`;
+
+  const tools = isCustom
+    ? `<button class="icon-btn" data-edit="${entry.key}" title="编辑条目" aria-label="编辑条目">${editSVG}</button>
+       <button class="icon-btn del" data-del="${entry.key}" title="删除" aria-label="删除">${trashSVG}</button>`
+    : `<button class="icon-btn" data-inline-edit="${entry.key}" title="编辑内容" aria-label="编辑内容">${editSVG}</button>`;
+
+  return `
+    <article class="card" data-key="${entry.key}">
+      <div class="card-top">
+        ${chips}
+        <div class="card-tools">
+          ${tools}
+          <button class="star ${fav ? "on" : ""}" data-star="${entry.key}"
+                  aria-label="${fav ? "取消收藏" : "收藏"}" title="${fav ? "取消收藏" : "收藏"}">
+            ${starSVG}
+          </button>
+        </div>
+      </div>
+      <h3>${title}</h3>
+      ${sub ? `<p class="sub">${sub}</p>` : ""}
+      <ul>${rows}</ul>
+      ${entry.calcId ? calcHTML(entry.calcId) : ""}
+    </article>`;
+}
+
+/* 编辑模式下的卡片：逐行输入 + 添加 / 删除 / 恢复默认 / 完成 */
+function editCardHTML(entry){
+  const fav = favorites.has(entry.key);
+  const chips = `
+    <div class="chips">
+      <span class="chip" style="color:#9dc4ff;background:rgba(59,130,246,.16);border-color:rgba(59,130,246,.4)">编辑中</span>
+    </div>`;
+
+  const rows = editRows.map(([k, v], i) => `
+      <div class="edit-row" data-row="${i}">
+        <input class="e-k" type="text" value="${escapeHtml(k)}" placeholder="项目名" data-field="k">
+        <textarea class="e-v" rows="1" placeholder="内容" data-field="v">${escapeHtml(v)}</textarea>
+        <button class="row-del" data-row-del="${i}" title="删除这一行" aria-label="删除这一行">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>`).join("");
+
+  return `
+    <article class="card editing" data-key="${entry.key}">
+      <div class="card-top">
+        ${chips}
+        <div class="card-tools">
+          <button class="star ${fav ? "on" : ""}" data-star="${entry.key}"
+                  aria-label="${fav ? "取消收藏" : "收藏"}" title="${fav ? "取消收藏" : "收藏"}">
+            ${starSVG}
+          </button>
+        </div>
+      </div>
+      <h3><input class="e-title" type="text" maxlength="60" value="${escapeHtml(editTitle)}" placeholder="卡片标题" data-edit-title="1"></h3>
+      <div class="edit-rows">${rows}</div>
+      <button class="add-row" data-add-row="1">＋ 添加一行</button>
+      <div class="edit-foot">
+        <button class="btn btn-restore" data-restore="${entry.key}">恢复默认</button>
+        <div class="foot-right">
+          <button class="btn btn-ghost" data-cancel-edit="1">取消</button>
+          <button class="btn btn-primary" data-save-edit="1">完成</button>
+        </div>
+      </div>
+      <div class="edit-hint">项目名可留空，内容会整行显示；保存后以新内容展示。</div>
+    </article>`;
+}
+
+function render(){
+  const q = query.trim();
+  const qLower = q.toLowerCase();
+
+  // 当前视图的基础集合：收藏页只在收藏内检索，其余情况搜索覆盖全部分类
+  let base;
+  if(activeCat === "fav"){
+    base = ENTRIES.filter(e => favorites.has(e.key));
+  }else if(q){
+    base = ENTRIES;
+  }else{
+    base = ENTRIES.filter(e => e.catId === activeCat);
+  }
+  // 关键词过滤
+  const list = q ? base.filter(e => searchText(e).includes(qLower)) : base;
+
+  // 标题区
+  if(activeCat === "fav"){
+    viewTitle.textContent = "我的收藏";
+    viewDesc.textContent = favorites.size ? "已收藏 " + favorites.size + " 条 · 刷新后仍保留" : "点击任意卡片右上角星标即可收藏";
+  }else if(q){
+    viewTitle.textContent = "搜索结果";
+    viewDesc.textContent = "跨全部 " + DATA.length + " 个分类检索";
+  }else{
+    const cat = DATA.find(c => c.id === activeCat);
+    viewTitle.textContent = cat.name;
+    viewDesc.textContent = cat.desc;
+  }
+
+  // 结果统计
+  resultText.innerHTML = q
+    ? `关键词 <strong>“${escapeHtml(q)}”</strong> · 找到 <strong>${list.length}</strong> 条`
+    : `共 <strong>${list.length}</strong> 条`;
+  favSummary.innerHTML = favorites.size
+    ? `<span style="color:#f5b942">★</span> 已收藏 <strong>${favorites.size}</strong> 条`
+    : "";
+
+  // 空状态
+  if(list.length === 0){
+    let emptyTitle, emptyText;
+    if(activeCat === "fav" && !q){
+      emptyTitle = "还没有收藏内容";
+      emptyText = '浏览任意分类，点击卡片右上角的 <em>★</em> 即可加入收藏。';
+    }else if(activeCat === "fav"){
+      emptyTitle = "收藏中没有匹配项";
+      emptyText = `收藏里没有包含 <em>“${escapeHtml(q)}”</em> 的条目，试试其他关键词。`;
+    }else{
+      emptyTitle = "没有找到相关条目";
+      emptyText = `没有包含 <em>“${escapeHtml(q)}”</em> 的内容，可尝试“血钾”“补液”“肾上腺素”等关键词。`;
+    }
+    contentEl.innerHTML = `
+      <div class="empty">
+        <div class="empty-ico">
+          <svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+        </div>
+        <h3>${emptyTitle}</h3>
+        <p>${emptyText}</p>
+      </div>`;
+    return;
+  }
+
+  const showCat = activeCat === "fav";
+  const showGroup = q && activeCat !== "fav";
+
+  let html = "";
+  if(showGroup){
+    // 搜索时按分类分组展示，便于定位
+    DATA.forEach(cat => {
+      const group = list.filter(e => e.catId === cat.id);
+      if(!group.length) return;
+      html += `
+        <div class="section-head">
+          <span class="bar"></span>
+          <h2>${cat.name}</h2>
+          <span class="count">${group.length}</span>
+        </div>
+        <div class="grid">${group.map(e => renderCard(e, q, false)).join("")}</div>`;
+    });
+  }else{
+    html = `<div class="grid">${list.map(e => renderCard(e, q, showCat)).join("")}</div>`;
+  }
+  contentEl.innerHTML = html;
+  if(editingKey){
+    contentEl.querySelectorAll(".e-v").forEach(autoGrow);
+  }else{
+    applyMarks(contentEl);
+  }
+}
+
+/* 正在编辑的卡片渲染为编辑态，其余保持浏览态 */
+function renderCard(entry, q, showCat){
+  return (editingKey && entry.key === editingKey) ? editCardHTML(entry) : cardHTML(entry, q, showCat);
+}
+
+/* =========================================================
+   内嵌计算器（临床计算公式）
+   ========================================================= */
+function calcIdForEntry(entry){
+  if(entry.isCustom || entry.catId !== "formula") return null;
+  const t = entry.baseTitle || entry.title;
+  if(/eGFR|肾小球滤过/.test(t)) return "egfr";
+  if(/Cockcroft|肌酐清除率/.test(t)) return "crcl";
+  if(/平均动脉压|MAP/.test(t)) return "map";
+  if(/阴离子间隙|AG/.test(t)) return "ag";
+  if(/^体表面积/.test(t)) return "bsa";
+  return null;
+}
+
+const CALC_ICON = '<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h.01M8 15h2M12 15h2M16 15h.01M8 19h2M12 19h2"/></svg>';
+const UNIT_OPTS = '<option value="umol">μmol/L</option><option value="mgdl">mg/dL</option>';
+
+const CALC_DEFS = {
+  egfr: {
+    fields: `
+      <label class="calc-field full">
+        <span>血肌酐 Scr</span>
+        <div class="calc-inline">
+          <input type="number" step="any" data-in="scr" placeholder="如 88.4">
+          <select data-in="unit">${UNIT_OPTS}</select>
+        </div>
+      </label>
+      <label class="calc-field"><span>年龄（岁）</span><input type="number" step="1" data-in="age" placeholder="如 60"></label>
+      <label class="calc-field"><span>性别</span><select data-in="sex"><option value="m">男</option><option value="f">女</option></select></label>
+    `,
+    run(root){
+      const scr = readNum(root, "scr", "血肌酐", 1, 3000);
+      const age = readNum(root, "age", "年龄", 18, 120);
+      const unit = getSel(root, "unit");
+      const sex = getSel(root, "sex");
+
+      const scrMg = unit === "umol" ? scr / 88.4 : scr;
+      const kappa = sex === "f" ? 0.7 : 0.9;
+      const alpha = sex === "f" ? -0.241 : -0.302;
+      const ratio = scrMg / kappa;
+      const egfr = 142
+        * Math.pow(Math.min(ratio, 1), alpha)
+        * Math.pow(Math.max(ratio, 1), -1.2)
+        * Math.pow(0.9938, age)
+        * (sex === "f" ? 1.012 : 1);
+
+      let stage, desc, cls;
+      if(egfr >= 90){ stage = "G1"; desc = "正常或升高"; cls = "ok"; }
+      else if(egfr >= 60){ stage = "G2"; desc = "轻度下降"; cls = "ok"; }
+      else if(egfr >= 45){ stage = "G3a"; desc = "轻中度下降"; cls = "warn"; }
+      else if(egfr >= 30){ stage = "G3b"; desc = "中重度下降"; cls = "warn"; }
+      else if(egfr >= 15){ stage = "G4"; desc = "重度下降"; cls = "warn"; }
+      else { stage = "G5"; desc = "肾衰竭"; cls = "warn"; }
+
+      return `
+        <div class="calc-value">${egfr.toFixed(1)}<small>mL/min/1.73 m²</small></div>
+        <div class="calc-meta">
+          <span class="calc-chip ${cls}">CKD ${stage}</span>
+          <span>${desc}；CKD-EPI 2021（无种族系数）</span>
+        </div>`;
+    }
+  },
+
+  crcl: {
+    fields: `
+      <label class="calc-field"><span>年龄（岁）</span><input type="number" step="1" data-in="age" placeholder="如 65"></label>
+      <label class="calc-field"><span>体重（kg）</span><input type="number" step="any" data-in="weight" placeholder="如 60"></label>
+      <label class="calc-field"><span>性别</span><select data-in="sex"><option value="m">男</option><option value="f">女</option></select></label>
+      <label class="calc-field">
+        <span>血肌酐 Scr</span>
+        <div class="calc-inline">
+          <input type="number" step="any" data-in="scr" placeholder="如 88.4">
+          <select data-in="unit">${UNIT_OPTS}</select>
+        </div>
+      </label>
+    `,
+    run(root){
+      const age = readNum(root, "age", "年龄", 18, 120);
+      const weight = readNum(root, "weight", "体重", 20, 250);
+      const scr = readNum(root, "scr", "血肌酐", 1, 3000);
+      const unit = getSel(root, "unit");
+      const sex = getSel(root, "sex");
+
+      const scrMg = unit === "umol" ? scr / 88.4 : scr;
+      const crcl = ((140 - age) * weight) / (72 * scrMg) * (sex === "f" ? 0.85 : 1);
+      const low = crcl < 30;
+
+      return `
+        <div class="calc-value">${crcl.toFixed(1)}<small>mL/min</small></div>
+        <div class="calc-meta">
+          <span class="calc-chip ${low ? "warn" : "ok"}">${low ? "CrCl <30" : "CrCl ≥30"}</span>
+          <span>${low
+            ? "多数经肾排泄药物需减量，必要时延长给药间隔"
+            : "可按说明书常规剂量，仍建议核对肾功能相关剂量调整"}</span>
+        </div>`;
+    }
+  },
+
+  map: {
+    fields: `
+      <label class="calc-field"><span>收缩压（mmHg）</span><input type="number" step="any" data-in="sbp" placeholder="如 90"></label>
+      <label class="calc-field"><span>舒张压（mmHg）</span><input type="number" step="any" data-in="dbp" placeholder="如 60"></label>
+    `,
+    run(root){
+      const sbp = readNum(root, "sbp", "收缩压", 50, 260);
+      const dbp = readNum(root, "dbp", "舒张压", 30, 180);
+      if(dbp > sbp) throw new Error("舒张压不应高于收缩压");
+
+      const map = (sbp + 2 * dbp) / 3;
+      const ok = map >= 65;
+
+      return `
+        <div class="calc-value">${map.toFixed(1)}<small>mmHg</small></div>
+        <div class="calc-meta">
+          <span class="calc-chip ${ok ? "ok" : "warn"}">${ok ? "MAP ≥65" : "MAP <65"}</span>
+          <span>${ok
+            ? "达到休克复苏的灌注目标（正常 70–100 mmHg）"
+            : "低于 65 mmHg，器官灌注不足风险，需评估液体复苏或升压治疗"}</span>
+        </div>`;
+    }
+  },
+
+  ag: {
+    fields: `
+      <label class="calc-field"><span>Na⁺（mmol/L）</span><input type="number" step="any" data-in="na" placeholder="如 140"></label>
+      <label class="calc-field"><span>Cl⁻（mmol/L）</span><input type="number" step="any" data-in="cl" placeholder="如 102"></label>
+      <label class="calc-field"><span>HCO₃⁻（mmol/L）</span><input type="number" step="any" data-in="hco3" placeholder="如 24"></label>
+      <label class="calc-field"><span>白蛋白 g/L（选填）</span><input type="number" step="any" data-in="alb" placeholder="如 40"></label>
+    `,
+    run(root){
+      const na = readNum(root, "na", "Na⁺", 90, 200);
+      const cl = readNum(root, "cl", "Cl⁻", 50, 160);
+      const hco3 = readNum(root, "hco3", "HCO₃⁻", 2, 50);
+      const alb = readNum(root, "alb", "白蛋白", 15, 60, true);
+
+      const ag = na - (cl + hco3);
+      const corrected = alb == null ? null : ag + 2.5 * (40 - alb) / 10;
+      const high = ag > 16;
+      const low = ag < 8;
+
+      return `
+        <div class="calc-value">${ag.toFixed(1)}<small>mmol/L</small></div>
+        ${corrected == null ? "" : `<div class="calc-row">白蛋白校正 AG：<b>${corrected.toFixed(1)}</b> mmol/L</div>`}
+        <div class="calc-meta">
+          <span class="calc-chip ${high || low ? "warn" : "ok"}">AG</span>
+          <span>${high
+            ? "高于正常（8–16），提示高 AG 代酸：乳酸、酮症、尿毒症或中毒"
+            : low
+              ? "低于正常（8–16），注意低白蛋白血症、稀释或检验误差"
+              : "在正常范围（8–16 mmol/L）"}</span>
+        </div>`;
+    }
+  },
+
+  bsa: {
+    fields: `
+      <label class="calc-field"><span>身高（cm）</span><input type="number" step="any" data-in="height" placeholder="如 170"></label>
+      <label class="calc-field"><span>体重（kg）</span><input type="number" step="any" data-in="weight" placeholder="如 65"></label>
+    `,
+    run(root){
+      const height = readNum(root, "height", "身高", 30, 250);
+      const weight = readNum(root, "weight", "体重", 1, 300);
+      const bsa = Math.sqrt(height * weight / 3600);
+
+      return `
+        <div class="calc-value">${bsa.toFixed(2)}<small>m²</small></div>
+        <div class="calc-meta">
+          <span class="calc-chip">Mosteller</span>
+          <span>BSA = √[身高 × 体重 / 3600]；成人常见 1.6–1.9 m²</span>
+        </div>`;
+    }
+  }
+};
+
+function calcHTML(id){
+  const def = CALC_DEFS[id];
+  if(!def) return "";
+  return `
+    <div class="calc" data-calc="${id}">
+      <button type="button" class="calc-toggle">${CALC_ICON}<span>计算</span></button>
+      <div class="calc-panel" hidden>
+        <div class="calc-grid">${def.fields}</div>
+        <div class="calc-error"></div>
+        <div class="calc-actions">
+          <button type="button" class="calc-run">计算</button>
+          <button type="button" class="calc-hide">收起</button>
+        </div>
+        <div class="calc-result" hidden></div>
+      </div>
+    </div>`;
+}
+
+function readNum(root, name, label, min, max, optional){
+  const el = root.querySelector('[data-in="' + name + '"]');
+  const raw = el ? String(el.value).trim() : "";
+  if(raw === ""){
+    if(optional) return null;
+    throw new Error("请填写" + label);
+  }
+  const n = Number(raw);
+  if(!Number.isFinite(n)) throw new Error(label + "需为数字");
+  if((min != null && n < min) || (max != null && n > max)){
+    throw new Error(label + "应在 " + min + "–" + max + " 之间");
+  }
+  return n;
+}
+
+function getSel(root, name){
+  const el = root.querySelector('[data-in="' + name + '"]');
+  return el ? el.value : "";
+}
+
+function runCalc(root){
+  const def = CALC_DEFS[root.dataset.calc];
+  if(!def) return;
+  const errEl = root.querySelector(".calc-error");
+  const resEl = root.querySelector(".calc-result");
+  errEl.textContent = "";
+  errEl.classList.remove("show");
+  try{
+    resEl.innerHTML = def.run(root);
+    resEl.hidden = false;
+  }catch(err){
+    resEl.hidden = true;
+    errEl.textContent = err.message || "输入有误，请检查";
+    errEl.classList.add("show");
+  }
+}
+
+/* 卡片交互：逐行编辑 / 星标 / 自定义条目（事件委托） */
+contentEl.addEventListener("click", (ev) => {
+  const um = ev.target.closest("mark.um");
+  if(um){
+    const card = um.closest(".card[data-key]");
+    if(card){
+      const rec = (marks[card.dataset.key] || []).find(r => r.id === um.dataset.mark);
+      if(rec) removeMarkRecord(card, rec);
+    }
+    hideMarkBar();
+    return;
+  }
+
+  const calcToggle = ev.target.closest(".calc-toggle");
+  if(calcToggle){
+    const calc = calcToggle.closest(".calc");
+    calc.querySelector(".calc-panel").hidden = false;
+    calcToggle.hidden = true;
+    return;
+  }
+
+  const calcHide = ev.target.closest(".calc-hide");
+  if(calcHide){
+    const calc = calcHide.closest(".calc");
+    calc.querySelector(".calc-panel").hidden = true;
+    calc.querySelector(".calc-toggle").hidden = false;
+    return;
+  }
+
+  const calcRun = ev.target.closest(".calc-run");
+  if(calcRun){ runCalc(calcRun.closest(".calc")); return; }
+
+  const startBtn = ev.target.closest("[data-inline-edit]");
+  if(startBtn){ startEdit(startBtn.dataset.inlineEdit); return; }
+
+  if(ev.target.closest("[data-add-row]")){ addEditRow(); return; }
+
+  const delRowBtn = ev.target.closest("[data-row-del]");
+  if(delRowBtn){ removeEditRow(Number(delRowBtn.dataset.rowDel)); return; }
+
+  if(ev.target.closest("[data-save-edit]")){ saveEdit(); return; }
+  if(ev.target.closest("[data-cancel-edit]")){ cancelEdit(); return; }
+
+  const restoreBtn = ev.target.closest("[data-restore]");
+  if(restoreBtn){ restoreCard(restoreBtn.dataset.restore); return; }
+
+  const editBtn = ev.target.closest("[data-edit]");
+  if(editBtn){
+    const entry = ENTRY_MAP.get(editBtn.dataset.edit);
+    const item = entry && customItems.find(i => i.id === entry.customId);
+    if(item) openModal(item);
+    return;
+  }
+
+  const delBtn = ev.target.closest("[data-del]");
+  if(delBtn){
+    const entry = ENTRY_MAP.get(delBtn.dataset.del);
+    if(entry) deleteCustom(entry);
+    return;
+  }
+
+  const btn = ev.target.closest("[data-star]");
+  if(!btn) return;
+  const key = btn.dataset.star;
+  const entry = ENTRY_MAP.get(key);
+  if(!entry) return;
+
+  if(favorites.has(key)){
+    favorites.delete(key);
+    btn.classList.remove("on");
+    btn.setAttribute("aria-label","收藏");
+    btn.title = "收藏";
+    showToast("已取消收藏", false);
+  }else{
+    favorites.add(key);
+    btn.classList.add("on");
+    btn.setAttribute("aria-label","取消收藏");
+    btn.title = "取消收藏";
+    showToast("已收藏 · " + entry.title, true);
+  }
+  saveFavorites();
+  renderNav();
+  // 收藏页中取消收藏后需要重新渲染列表
+  if(activeCat === "fav"){
+    editingKey = null;
+    editRows = [];
+    render();
+  }
+  else{
+    favSummary.innerHTML = favorites.size
+      ? `<span style="color:#f5b942">★</span> 已收藏 <strong>${favorites.size}</strong> 条`
+      : "";
+  }
+});
+
+/* 计算器输入框内回车直接计算 */
+contentEl.addEventListener("keydown", (ev) => {
+  if(ev.key !== "Enter" || ev.target.tagName !== "INPUT") return;
+  const calc = ev.target.closest(".calc");
+  if(!calc) return;
+  ev.preventDefault();
+  runCalc(calc);
+});
+
+/* 编辑态输入框实时同步到内存 */
+contentEl.addEventListener("input", (ev) => {
+  if(ev.target.classList.contains("e-title")){
+    editTitle = ev.target.value;
+    return;
+  }
+  const field = ev.target.closest("[data-field]");
+  if(!field) return;
+  const row = ev.target.closest(".edit-row");
+  if(!row) return;
+  const i = Number(row.dataset.row);
+  if(!editRows[i]){
+    editRows[i] = ["", ""];
+  }
+  if(field.dataset.field === "k"){
+    editRows[i][0] = ev.target.value;
+  }else{
+    editRows[i][1] = ev.target.value;
+    if(ev.target.tagName === "TEXTAREA") autoGrow(ev.target);
+  }
+});
+
+/* =========================================================
+   卡片逐行编辑（叠加层：localStorage med3_custom_v1）
+   ========================================================= */
+function htmlToText(html){
+  const div = document.createElement("div");
+  div.innerHTML = String(html);
+  return (div.textContent || "").replace(/\u00a0/g, " ");
+}
+
+function autoGrow(el){
+  el.style.height = "auto";
+  el.style.height = Math.max(32, el.scrollHeight) + "px";
+}
+
+/* 内置卡片的初始行（纯文本，用于对比与恢复） */
+function basePlainRows(entry){
+  return (entry.baseRows || entry.list).map(([k, v]) => [htmlToText(k), htmlToText(v)]);
+}
+
+function startEdit(key){
+  const entry = ENTRY_MAP.get(key);
+  if(!entry || entry.isCustom) return;
+  editingKey = key;
+  editTitle = entry.title;
+  editRows = entry.list.map(([k, v]) => [htmlToText(k), htmlToText(v)]);
+  render();
+  const card = contentEl.querySelector(".card.editing");
+  if(card && card.scrollIntoView) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function cancelEdit(){
+  if(!editingKey) return;
+  editingKey = null;
+  editRows = [];
+  editTitle = "";
+  render();
+}
+
+/* 只重绘当前编辑卡片，避免整页跳动 */
+function rerenderEditingCard(focusSelector){
+  const old = contentEl.querySelector(".card.editing");
+  const entry = editingKey ? ENTRY_MAP.get(editingKey) : null;
+  if(!old || !entry){
+    cancelEdit();
+    return;
+  }
+  old.outerHTML = editCardHTML(entry);
+  contentEl.querySelectorAll(".e-v").forEach(autoGrow);
+  if(focusSelector){
+    const target = contentEl.querySelector(focusSelector);
+    if(target) target.focus();
+  }
+}
+
+function addEditRow(){
+  editRows.push(["", ""]);
+  rerenderEditingCard(".edit-row:last-child .e-k");
+}
+
+function removeEditRow(index){
+  if(!editRows[index]) return;
+  editRows.splice(index, 1);
+  rerenderEditingCard();
+}
+
+function saveEdit(){
+  const key = editingKey;
+  if(!key) return;
+  const entry = ENTRY_MAP.get(key);
+  if(!entry){ cancelEdit(); return; }
+
+  const rows = editRows
+    .map(([k, v]) => [String(k).trim(), String(v).trim()])
+    .filter(([k, v]) => k || v);
+
+  const title = String(editTitle).trim();
+  if(!title){
+    showToast("标题不能为空", false);
+    return;
+  }
+  if(!rows.length){
+    showToast("请至少保留一行内容", false);
+    return;
+  }
+
+  // 与初始内容一致时不再保留覆盖记录
+  const base = basePlainRows(entry);
+  const titleChanged = title !== entry.baseTitle;
+  if(!titleChanged && JSON.stringify(rows) === JSON.stringify(base)){
+    delete rowOverrides[key];
+  }else{
+    const rec = { rows, updatedAt: Date.now() };
+    if(titleChanged) rec.title = title;
+    rowOverrides[key] = rec;
+  }
+  saveRowOverrides();
+
+  editingKey = null;
+  editRows = [];
+  editTitle = "";
+  buildEntries();
+  renderNav();
+  render();
+  showToast("已保存修改", false);
+}
+
+function restoreCard(key){
+  const entry = ENTRY_MAP.get(key);
+  if(!entry) return;
+  if(!rowOverrides[key]){
+    showToast("当前已是默认内容", false);
+    return;
+  }
+  if(!confirm("确定恢复「" + entry.title + "」的初始内容吗？该卡片的全部自定义修改都会被清除。")) return;
+
+  delete rowOverrides[key];
+  saveRowOverrides();
+  buildEntries();
+  const fresh = ENTRY_MAP.get(key);
+  editRows = fresh ? basePlainRows(fresh) : [];
+  editTitle = fresh ? fresh.title : "";
+  renderNav();
+  render();
+  showToast("已恢复默认内容", false);
+}
+
+/* =========================================================
+   自定义条目：新增 / 编辑 / 删除
+   ========================================================= */
+const maskEl = document.getElementById("mask");
+const modalTitleEl = document.getElementById("modalTitle");
+const formEl = document.getElementById("entryForm");
+const formTitle = document.getElementById("formTitle");
+const formCat = document.getElementById("formCat");
+const formContent = document.getElementById("formContent");
+const fieldTitle = document.getElementById("fieldTitle");
+const fieldContent = document.getElementById("fieldContent");
+
+// 分类下拉选项
+formCat.innerHTML = DATA.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
+
+function openModal(item){
+  editingId = item ? item.id : null;
+  modalTitleEl.textContent = item ? "编辑条目" : "添加自定义条目";
+  formTitle.value = item ? item.title : "";
+  formContent.value = item ? item.content : "";
+  formCat.value = item
+    ? item.catId
+    : (DATA.some(c => c.id === activeCat) ? activeCat : DATA[0].id);
+  clearFormErrors();
+  maskEl.classList.add("open");
+  maskEl.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => formTitle.focus(), 80);
+}
+
+function closeModal(){
+  maskEl.classList.remove("open");
+  maskEl.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  editingId = null;
+}
+
+function clearFormErrors(){
+  fieldTitle.classList.remove("invalid");
+  fieldContent.classList.remove("invalid");
+}
+
+function saveEntry(){
+  const title = formTitle.value.trim();
+  const content = formContent.value.trim();
+  const catId = formCat.value;
+
+  clearFormErrors();
+  if(!title){
+    fieldTitle.classList.add("invalid");
+    formTitle.focus();
+    return;
+  }
+  if(!content){
+    fieldContent.classList.add("invalid");
+    formContent.focus();
+    return;
+  }
+
+  let targetKey;
+  if(editingId){
+    const item = customItems.find(i => i.id === editingId);
+    if(!item){ closeModal(); return; }
+    item.title = title;
+    item.catId = catId;
+    item.content = content;
+    item.updatedAt = Date.now();
+    targetKey = "custom:" + item.id;
+    showToast("已保存修改", true);
+  }else{
+    const id = "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    customItems.push({ id, catId, title, content, createdAt: Date.now() });
+    targetKey = "custom:" + id;
+    showToast("已添加 · " + title, true);
+  }
+  saveCustom();
+  buildEntries();
+
+  // 编辑时若停留在收藏页则保持原页面，其余情况跳到该分类
+  if(!editingId || activeCat !== "fav") activeCat = catId;
+
+  // 退出搜索态与行内编辑，确保新条目可见
+  editingKey = null;
+  editRows = [];
+  query = "";
+  searchInput.value = "";
+  searchBox.classList.remove("has-value");
+
+  closeModal();
+  renderNav();
+  render();
+  flashCard(targetKey);
+}
+
+function deleteCustom(entry){
+  if(!confirm("确定删除「" + entry.title + "」吗？删除后无法恢复。")) return;
+  customItems = customItems.filter(i => i.id !== entry.customId);
+  saveCustom();
+  if(favorites.delete(entry.key)) saveFavorites();
+  buildEntries();
+  renderNav();
+  render();
+  showToast("已删除条目", false);
+}
+
+function flashCard(key){
+  const card = contentEl.querySelector('.card[data-key="' + key + '"]');
+  if(!card) return;
+  card.classList.add("flash");
+  if(card.scrollIntoView){
+    card.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  setTimeout(() => card.classList.remove("flash"), 2200);
+}
+
+/* 弹窗事件 */
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalCancel").addEventListener("click", closeModal);
+maskEl.addEventListener("click", (ev) => {
+  if(ev.target === maskEl) closeModal();
+});
+formEl.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  saveEntry();
+});
+formTitle.addEventListener("input", () => fieldTitle.classList.remove("invalid"));
+formContent.addEventListener("input", () => fieldContent.classList.remove("invalid"));
+
+/* =========================================================
+   数据备份：导出 / 导入 JSON
+   ========================================================= */
+const backupMask = document.getElementById("backupMask");
+const backupStatsEl = document.getElementById("backupStats");
+const importFile = document.getElementById("importFile");
+
+function openBackup(){
+  refreshBackupStats();
+  backupMask.classList.add("open");
+  backupMask.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeBackup(){
+  backupMask.classList.remove("open");
+  backupMask.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+function refreshBackupStats(){
+  let markCount = 0;
+  Object.keys(marks).forEach(k => { markCount += marks[k].length; });
+  backupStatsEl.innerHTML = `
+    <div class="backup-stat"><b>${favorites.size}</b><span>收藏记录</span></div>
+    <div class="backup-stat"><b>${customItems.length}</b><span>自定义条目</span></div>
+    <div class="backup-stat"><b>${Object.keys(rowOverrides).length}</b><span>修改的卡片</span></div>
+    <div class="backup-stat"><b>${markCount}</b><span>文字标注</span></div>`;
+}
+
+function exportBackup(){
+  const payload = {
+    app: "med3-quick-ref",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    favorites: [...favorites],
+    customItems,
+    rowOverrides,
+    marks
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const d = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  const name = "医学三基速查手册-备份-"
+    + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate())
+    + "-" + pad(d.getHours()) + pad(d.getMinutes()) + ".json";
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  showToast("已导出备份文件", false);
+}
+
+function importBackup(data){
+  if(!data || typeof data !== "object" || Array.isArray(data)) throw new Error("invalid");
+  const hasAny = Array.isArray(data.favorites)
+    || Array.isArray(data.customItems)
+    || (data.rowOverrides && typeof data.rowOverrides === "object")
+    || (data.marks && typeof data.marks === "object");
+  if(!hasAny) throw new Error("invalid");
+
+  const favArr = Array.isArray(data.favorites)
+    ? data.favorites.filter(k => typeof k === "string")
+    : [];
+  const items = Array.isArray(data.customItems)
+    ? data.customItems.filter(it => it
+        && typeof it.id === "string"
+        && typeof it.title === "string"
+        && typeof it.content === "string"
+        && typeof it.catId === "string")
+    : [];
+  const overrides = normalizeOverrides(data.rowOverrides || {});
+  const importedMarks = normalizeMarks(data.marks || {});
+  let markCount = 0;
+  Object.keys(importedMarks).forEach(k => { markCount += importedMarks[k].length; });
+
+  const msg = "将用备份覆盖当前数据：\n"
+    + "收藏 " + favArr.length + " 条 · 自定义条目 " + items.length + " 条 · 修改卡片 " + Object.keys(overrides).length + " 张 · 标注 " + markCount + " 处\n"
+    + "确定导入吗？";
+  if(!confirm(msg)) return;
+
+  favorites = new Set(favArr);
+  customItems = items;
+  rowOverrides = overrides;
+  marks = importedMarks;
+  editingKey = null;
+  editRows = [];
+  editTitle = "";
+
+  buildEntries();
+  // 过滤掉备份中已不存在的卡片收藏，避免计数错位
+  favorites = new Set([...favorites].filter(k => ENTRY_MAP.has(k)));
+  saveFavorites();
+  saveCustom();
+  saveRowOverrides();
+  saveMarks();
+
+  closeBackup();
+  renderNav();
+  render();
+  showToast("已导入备份", false);
+}
+
+document.getElementById("backupClose").addEventListener("click", closeBackup);
+document.getElementById("backupCloseBtn").addEventListener("click", closeBackup);
+backupMask.addEventListener("click", (ev) => {
+  if(ev.target === backupMask) closeBackup();
+});
+document.getElementById("backupExport").addEventListener("click", exportBackup);
+document.getElementById("backupImport").addEventListener("click", () => importFile.click());
+importFile.addEventListener("change", async () => {
+  const file = importFile.files && importFile.files[0];
+  importFile.value = "";
+  if(!file) return;
+  try{
+    const text = await file.text();
+    importBackup(JSON.parse(text));
+  }catch(e){
+    showToast("文件格式不正确", false);
+  }
+});
+
+/* =========================================================
+   文字标注：选中内容后选颜色，点击标注可取消
+   ========================================================= */
+const markBar = document.getElementById("markBar");
+let markTarget = null;
+let markTimer = null;
+
+document.addEventListener("selectionchange", () => {
+  clearTimeout(markTimer);
+  markTimer = setTimeout(syncMarkBar, 120);
+});
+window.addEventListener("scroll", hideMarkBar, true);
+window.addEventListener("resize", hideMarkBar);
+
+function hideMarkBar(){
+  markBar.hidden = true;
+  markTarget = null;
+}
+
+function nodeElement(node){
+  if(!node) return null;
+  if(node.nodeType === 3) return node.parentElement;
+  return node.nodeType === 1 ? node : null;
+}
+
+function getSelectionTarget(){
+  const sel = window.getSelection();
+  if(!sel || !sel.rangeCount || sel.isCollapsed) return null;
+  const range = sel.getRangeAt(0);
+  const startEl = nodeElement(range.startContainer);
+  const endEl = nodeElement(range.endContainer);
+  if(!startEl || !endEl) return null;
+
+  const fieldEl = startEl.closest ? startEl.closest(".k, .v") : null;
+  if(!fieldEl) return null;
+  if(!fieldEl.contains(range.endContainer)) return null;
+  const endField = endEl.closest ? endEl.closest(".k, .v") : null;
+  if(endField !== fieldEl) return null;
+
+  const li = fieldEl.closest("li");
+  const card = fieldEl.closest(".card[data-key]");
+  if(!li || !card) return null;
+
+  let start;
+  try{
+    const pre = document.createRange();
+    pre.selectNodeContents(fieldEl);
+    pre.setEnd(range.startContainer, range.startOffset);
+    start = pre.toString().length;
+  }catch(e){
+    return null;
+  }
+  const end = start + range.toString().length;
+  if(end <= start) return null;
+
+  const rect = range.getBoundingClientRect();
+  if(!rect || (!rect.width && !rect.height)) return null;
+
+  return {
+    card,
+    fieldEl,
+    field: fieldEl.classList.contains("k") ? "k" : "v",
+    row: Array.from(card.querySelectorAll("li")).indexOf(li),
+    start,
+    end,
+    rect
+  };
+}
+
+/* 选区是否包含仍处于强调状态（未被恢复正文）的加粗内容 */
+function selectionHasBold(target){
+  const bolds = Array.from(target.fieldEl.querySelectorAll("b"));
+  return bolds.some(b => {
+    if(b.closest("mark.um-plain")) return false;
+    let s;
+    try{
+      const pre = document.createRange();
+      pre.selectNodeContents(target.fieldEl);
+      pre.setEndBefore(b);
+      s = pre.toString().length;
+    }catch(e){
+      return false;
+    }
+    const e = s + b.textContent.length;
+    return s < target.end && target.start < e;
+  });
+}
+
+function syncMarkBar(){
+  if(maskEl.classList.contains("open") || backupMask.classList.contains("open") || editingKey){
+    hideMarkBar();
+    return;
+  }
+  const target = getSelectionTarget();
+  if(!target){
+    hideMarkBar();
+    return;
+  }
+  markTarget = target;
+  markBar.hidden = false;
+  const barW = markBar.offsetWidth || 200;
+  const barH = markBar.offsetHeight || 34;
+  let left = target.rect.left + target.rect.width / 2;
+  left = Math.max(barW / 2 + 10, Math.min(window.innerWidth - barW / 2 - 10, left));
+  let top = target.rect.top - barH - 10;
+  if(top < 56) top = target.rect.bottom + 10;
+  markBar.style.left = left + "px";
+  markBar.style.top = top + "px";
+}
+
+markBar.addEventListener("mousedown", (ev) => ev.preventDefault());
+markBar.addEventListener("click", (ev) => {
+  const dot = ev.target.closest("[data-color]");
+  if(dot && markTarget){
+    addMark(markTarget, dot.dataset.color);
+    return;
+  }
+  if(ev.target.closest("[data-clear]") && markTarget){
+    clearSelectionMarks(markTarget);
+  }
+});
+
+function addMark(target, color){
+  const key = target.card.dataset.key;
+  if(!key) return;
+
+  const emphasize = color === "plain" && selectionHasBold(target);
+  const overlaps = (marks[key] || []).filter(old =>
+    old.row === target.row
+    && old.field === target.field
+    && old.start < target.end
+    && target.start < old.end);
+
+  // 「正文」且该处没有可取消的加粗：只清理彩色标注
+  if(color === "plain" && !emphasize){
+    overlaps.forEach(old => {
+      if(old.color !== "plain") removeMarkRecord(target.card, old, false);
+    });
+    saveMarks();
+    hideMarkBar();
+    try{ window.getSelection().removeAllRanges(); }catch(e){}
+    return;
+  }
+
+  // 移除重叠的旧标注，避免标签嵌套
+  overlaps.forEach(old => removeMarkRecord(target.card, old, false));
+
+  const rec = {
+    id: "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    field: target.field,
+    row: target.row,
+    start: target.start,
+    end: target.end,
+    color
+  };
+
+  if(!marks[key]) marks[key] = [];
+  marks[key].push(rec);
+  saveMarks();
+
+  wrapRange(target.fieldEl, rec.start, rec.end, rec.color, rec.id);
+  hideMarkBar();
+  try{ window.getSelection().removeAllRanges(); }catch(e){}
+}
+
+function clearSelectionMarks(target){
+  const key = target.card.dataset.key;
+  (marks[key] || []).slice().forEach(rec => {
+    if(rec.row === target.row && rec.field === target.field
+      && rec.start < target.end && target.start < rec.end){
+      removeMarkRecord(target.card, rec, false);
+    }
+  });
+  saveMarks();
+  hideMarkBar();
+  try{ window.getSelection().removeAllRanges(); }catch(e){}
+}
+
+function removeMarkRecord(card, rec, persist){
+  const key = card.dataset.key;
+  const list = marks[key] || [];
+  marks[key] = list.filter(r => r.id !== rec.id);
+  if(!marks[key].length) delete marks[key];
+
+  card.querySelectorAll('mark.um[data-mark="' + rec.id + '"]').forEach(m => {
+    const parent = m.parentNode;
+    while(m.firstChild) parent.insertBefore(m.firstChild, m);
+    parent.removeChild(m);
+  });
+  if(card.normalize) card.normalize();
+  if(persist !== false) saveMarks();
+}
+
+/* =========================================================
+   搜索交互
+   ========================================================= */
+let searchTimer = null;
+searchInput.addEventListener("input", () => {
+  const val = searchInput.value;
+  searchBox.classList.toggle("has-value", val.length > 0);
+  clearTimeout(searchTimer);
+  // 轻微防抖，保证大段输入时依然顺滑
+  searchTimer = setTimeout(() => {
+    query = val;
+    if(editingKey){
+      editingKey = null;
+      editRows = [];
+    }
+    render();
+  }, 70);
+});
+
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  query = "";
+  editingKey = null;
+  editRows = [];
+  searchBox.classList.remove("has-value");
+  searchInput.focus();
+  render();
+});
+
+document.addEventListener("keydown", (ev) => {
+  // 备份弹窗打开时只处理 Esc
+  if(backupMask.classList.contains("open")){
+    if(ev.key === "Escape"){ ev.preventDefault(); closeBackup(); }
+    return;
+  }
+
+  // 弹窗打开时：Esc 关闭，Ctrl/⌘ + Enter 保存
+  if(maskEl.classList.contains("open")){
+    if(ev.key === "Escape"){ ev.preventDefault(); closeModal(); }
+    if((ev.ctrlKey || ev.metaKey) && ev.key === "Enter"){ ev.preventDefault(); saveEntry(); }
+    return;
+  }
+
+  const tag = document.activeElement.tagName;
+  const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+  if(ev.key === "Escape" && editingKey){
+    ev.preventDefault();
+    cancelEdit();
+    return;
+  }
+  if(ev.key === "/" && !typing){
+    ev.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+  if(ev.key === "Escape"){
+    if(document.activeElement === searchInput){
+      if(searchInput.value){
+        searchInput.value = "";
+        query = "";
+        searchBox.classList.remove("has-value");
+        render();
+      }else{
+        searchInput.blur();
+      }
+    }
+  }
+});
+
+/* =========================================================
+   Toast
+   ========================================================= */
+let toastTimer = null;
+function showToast(text, starred){
+  toastText.textContent = text;
+  toastEl.querySelector("svg").style.display = starred ? "" : "none";
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+}
+
+/* =========================================================
+   初始化
+   ========================================================= */
+buildEntries();
+renderNav();
+render();
+</script>
+</body>
+</html>
